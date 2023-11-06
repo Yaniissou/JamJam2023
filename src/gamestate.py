@@ -1,7 +1,10 @@
 from enum import Enum
 
 class GameState(Enum):
-    START = 0
-    GAME = 1
-    SCREAMER = 2
-    END = 3
+    
+    INITIATING = 0
+    WAITING_FOR_START = 1
+    START = 2
+    PLAYING = 3
+    SCREAMER = 4
+    END = 5
