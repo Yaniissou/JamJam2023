@@ -9,7 +9,7 @@ pygame.font.init()
 pygame.mixer.init()
 
 clock = pygame.time.Clock()
-font = pygame.font.Font("fonts/Minecraft.ttf", 36)
+font = pygame.font.Font("fonts/Minecraft.ttf", 72)
 favicon = pygame.image.load("assets/favicon/favicon.png")
 pygame.display.set_icon(favicon)
 
