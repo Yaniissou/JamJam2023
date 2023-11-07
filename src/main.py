@@ -99,8 +99,7 @@ def drawHistory(window):
     
 def drawCharacter(window) :
     fontsprite = pygame.font.Font("fonts/Minecraft.ttf", 26)
-    
-    pygame.display.set_caption('Choix du sprite')
+
 
     BLACK = (0, 0, 0)
     text = font.render("Faites votre choix", False, (255, 255, 255))
