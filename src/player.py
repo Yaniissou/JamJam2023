@@ -3,16 +3,30 @@ from pygame.locals import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y,gender):
         super().__init__()
-        self.images = [
-            pygame.image.load("assets/player/Player0.png"),  # Image d'idle
-            pygame.image.load("assets/player/Player1.png"),  # Image d'idle
-            pygame.image.load("assets/player/Player2.png"),  # Walk cycle
-            pygame.image.load("assets/player/Player3.png"),  # Walk cycle
-            pygame.image.load("assets/player/Player4.png"),  # Walk cycle
-            pygame.image.load("assets/player/Player5.png")   # Walk cycle
-        ]  # Ajoutez les autres images d'animation
+        
+        
+        self.gender = gender
+        if gender ==0:                      #0 si garcon et 1 si fille
+            self.images = [
+                pygame.image.load("assets/player/Player0.png"),  # Image d'idle
+                pygame.image.load("assets/player/Player1.png"),  # Image d'idle
+                pygame.image.load("assets/player/Player2.png"),  # Walk cycle
+                pygame.image.load("assets/player/Player3.png"),  # Walk cycle
+                pygame.image.load("assets/player/Player4.png"),  # Walk cycle
+                pygame.image.load("assets/player/Player5.png")   # Walk cycle
+        ]
+        elif gender == 1:
+             self.images = [
+                pygame.image.load("assets/playerFemale/PlayerFemale0.png"),  # Image d'idle
+                pygame.image.load("assets/playerFemale/PlayerFemale1.png"),  # Image d'idle
+                pygame.image.load("assets/playerFemale/PlayerFemale2.png"),  # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale3.png"),  # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale4.png"),  # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale5.png")   # Walk cycle
+            ]   
+            # Ajoutez les autres images d'animation
         self.image_index = 0  # Indice de l'image en cours
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect()
@@ -21,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.animation_speed = 2  # Vitesse d'animation (plus le nombre est élevé, plus l'animation est lente)
         self.animation_counter = 0  # Compteur pour gérer l'animation
 
+    
     def deplacer(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
