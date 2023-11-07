@@ -25,10 +25,7 @@ startButton = Button(window_width/2, window_height/1.25, pygame.image.load("asse
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption('Save The Exams')
 
-#Create landing text
-text = font.render("Save The Exams", False, (255, 255, 255))
-text_rect = text.get_rect()
-text_rect.center = (window_width/2, window_height/4)
+
 
 #starting background
 startingBackground = pygame.image.load("assets/bg/startbg.png")
@@ -48,23 +45,82 @@ def clear(window):
     window.fill((0, 0, 0))
 
 def startGame(window):
+    
     print("The game is starting")
     clear(window)   
     window.blit(ingameBackground, (0, 0)) 
+    
+def initWindow(window):
+    #Create landing text
+    startingtext = font.render("Save The Exams", False, (255, 255, 255))
+    startingtext_rect = startingtext.get_rect()
+    startingtext_rect.center = (window_width/2, window_height/4)
+    window.blit(startingBackground, (0, 0))
+    window.blit(startingtext, startingtext_rect)
+    startButton.draw(window)
+    pygame.mixer.music.play()
+        
+        
+def drawHistory(window):
+    infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
+    messages = ["Vous venez de lamentablement foirer vos partiels de",
+                "mi- semestre, et la suite semble mal embarquer :/",
+                "Votre derniere chance ?",
+                "",
+                "Obtenir 20/20 a tous les",
+                "examens de la prochaine semaine de partiels !",
+                "Alors que vous aviez abandonne tout espoir,",
+                "une rumeur commence a se propager dans l'IUT:",
+                "Il existerait une clef USB secrete dans le bureau 101,",
+                "regroupant l'integralite des prochains examens...",
+                "Votre objectif ? Equipe d'une lampe torche, vous ",
+                "infiltrez l'IUT de nuit pour recuperer la fameuse clef.",
+                "Mais attention, des choses etranges se produisent",
+                "en dehors des heures d'ouverture..."]
+    clear(window)
+    window.fill((0, 0, 0))
+    historyheight = 120
+    for i in range(len(messages)):
+        
+        historytext = font.render(messages[i], False, (255, 255, 255))
+        historytext_rect = historytext.get_rect()
+        historytext_rect.center = (window_width/2, historyheight)
+        window.blit(historytext, historytext_rect)
+        historyheight += 30
+        
+    startButton.draw(window) 
+    
+   
+
+
+
+
+
+        
 
 
 #main loop
 
 while run:
     clock.tick(60)
-    
+   
     if(gamestate == GameState.INITIATING):
         #draw background
-        window.blit(startingBackground, (0, 0))
-        window.blit(text, text_rect)
-        startButton.draw(window)
-        pygame.mixer.music.play()
+        initWindow(window)
+        gamestate = GameState.WAITING_FOR_HISTORY
+        
+        
+    elif(gamestate == GameState.WAITING_FOR_HISTORY):
+        if startButton.isClicked():
+            gamestate = GameState.HISTORY
+            print("Start button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2)
+    
+    elif(gamestate == GameState.HISTORY):
+        clear(window)
+        drawHistory(window)
         gamestate = GameState.WAITING_FOR_START
+           
         
     elif(gamestate == GameState.WAITING_FOR_START):    
         if startButton.isClicked():
