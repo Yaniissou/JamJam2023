@@ -63,7 +63,6 @@ def initWindow(window):
         
 def drawHistory(window):
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
-    message = "Vous venez de lamentablement foirer vos partiels de \nmi- semestre, et la suite semble mal embarquer :/\nVotre derniere chance ? Obtenir 20/20 a tous les examens de\nla prochaine semaine de partiels !\nAlors que vous aviez abandonne tout espoir, une rumeur commence a se propager dans l'IUT:\nIl existerait une clef USB secrete dans le bureau 101, regroupant l'integralite des prochains examens…\nVotre objectif ? Equipe d'une lampe torche, vous infiltrez \nl'IUT de nuit pour recuperer la fameuse clef. Mais attention, des choses etranges se produisent en dehors des heures d'ouverture…"
     messages = ["Vous venez de lamentablement foirer vos partiels de",
                 "mi- semestre, et la suite semble mal embarquer :/",
                 "Votre derniere chance ?",
