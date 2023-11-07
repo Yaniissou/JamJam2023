@@ -3,7 +3,7 @@ from pygame.locals import *
 from gamestate import GameState
 from button import Button
 from player import Player
-
+from enemy import Enemy
 #inits
 pygame.init()
 pygame.font.init()
@@ -32,6 +32,14 @@ startingtext_rect = startingtext.get_rect()
 startingsubtext_rect = subtitle.get_rect()
 startingtext_rect.center = (window_width/2, window_height/4)
 startingsubtext_rect.center = (window_width/2, window_height/3)
+images =[
+            pygame.image.load("assets/blanchon/Blanchon0.png"),
+            pygame.image.load("assets/blanchon/Blanchon1.png"),
+            pygame.image.load("assets/blanchon/screamer/screamBlanchon0.png"),
+            pygame.image.load("assets/blanchon/screamer/screamBlanchon1.png"),
+            pygame.image.load("assets/blanchon/screamer/screamBlanchon2.png")
+        ]         
+enemy = Enemy(800,334,images)
 
 #create the window
 window = pygame.display.set_mode((window_width, window_height))
@@ -140,9 +148,11 @@ def drawCharacter(window) :
 
 def playingMod(window,joueur) :
     clear(window)  
+    window.blit(enemy.image,enemy.rect)
     window.blit(joueur.image,joueur.rect)
-    
+    enemy.deplacer(joueur)
     joueur.deplacer()
+    
         
 
 
