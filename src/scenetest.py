@@ -138,16 +138,14 @@ def drawCharacter(window) :
     window.blit(textsprite2, textsprite2_rect)
     
 
-def deplacer(window,joueur) :
-        
+def debutjeu(window,joueur) :
+    clear(window)  
     window.blit(joueur.image,joueur.rect)
+    
     joueur.deplacer()
     
 
-
-        
-
-
+     
 #main loop
 
 while run:
@@ -180,23 +178,20 @@ while run:
             #Afficher ta fenêtre
             drawCharacter(window)    
             
-    elif(gamestate == GameState.CHARACTER):
-        
-        if(btnSprite1.isClicked()):
+    elif gamestate == GameState.CHARACTER:
+        if btnSprite1.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
-            joueur = Player(512,334,0)
-            
-            
-        elif(btnSprite2.isClicked()):
+            joueur = Player(512, 334, 0)
+        elif btnSprite2.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
-            joueur = Player(512,354,1)
+            joueur = Player(512, 354, 1)
             
+    elif gamestate == GameState.PLAYING:
+        debutjeu(window, joueur)
         
-    elif(gamestate == GameState.PLAYING):
-        debutjeu(window,joueur)
-            
+    
     
     
     

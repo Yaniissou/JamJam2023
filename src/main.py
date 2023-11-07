@@ -136,8 +136,11 @@ def drawCharacter(window) :
     
     
 
-
-
+def playingMod(window,joueur) :
+    clear(window)  
+    window.blit(joueur.image,joueur.rect)
+    
+    joueur.deplacer()
         
 
 
@@ -175,10 +178,17 @@ while run:
             
     elif(gamestate == GameState.CHARACTER):
         
-        if(btnSprite1.isClicked()):
-            gender = 0
-        elif(btnSprite2.isClicked()):
-            gender = 1
+        if btnSprite1.isClicked():
+            gamestate = GameState.PLAYING
+            clear(window)
+            joueur = Player(512, 334, 0)
+        elif btnSprite2.isClicked():
+            gamestate = GameState.PLAYING
+            clear(window)
+            joueur = Player(512, 354, 1)
+            
+    elif gamestate == GameState.PLAYING:
+        playingMod(window, joueur)        
         
     
     
