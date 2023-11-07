@@ -138,7 +138,7 @@ while True:
         fenetre.blit(mur.image, mur.rect)
     fenetre.blit(joueur.image, joueur.rect)
     
-    # Ajouter le code pour la lampe torche ici
+   
     filter = pygame.surface.Surface((screen_width, screen_height))
     filter.fill(pygame.color.Color('White'))
     filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))

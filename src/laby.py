@@ -5,13 +5,16 @@ import sys
 pygame.init()
 
 # Définir les dimensions de la fenêtre
-WINDOW_SIZE = (1024, 768)
+screen_width = 1024
+screen_height = 768
+WINDOW_SIZE = (screen_width, screen_height)
 WINDOW = pygame.display.set_mode(WINDOW_SIZE)
 pygame.display.set_caption("Labyrinthe")
 
 # Chargement des images
 player_image = pygame.image.load("assets/player/boy/Player1.png")
 player_image = pygame.transform.scale(player_image, (40, 40))
+lampe = pygame.image.load('assets/elements/circle.png')
 
 
 class Wall:
@@ -45,7 +48,7 @@ player = Player(1, 1)
 # Boucle principale du jeu
 clock = pygame.time.Clock()
 while True:
-    clock.tick(30)
+    clock.tick(15)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -84,6 +87,11 @@ while True:
 
     # Dessiner le joueur
     WINDOW.blit(player_image, player.rect.topleft)
+    
+    filter = pygame.surface.Surface((screen_width, screen_height))
+    filter.fill(pygame.color.Color('White'))
+    filter.blit(lampe, (player.rect.centerx-100, player.rect.centery-100))
+    WINDOW.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
 
     # Mettre à jour l'affichage
     pygame.display.flip()

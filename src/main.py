@@ -151,6 +151,8 @@ def playingMod(window,joueur) :
 while run:
     clock.tick(60)
     
+
+    
     if(gamestate == GameState.INITIATING):
         #draw background
         initWindow(window)
