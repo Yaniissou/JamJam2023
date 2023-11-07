@@ -67,7 +67,7 @@ def initWindow(window):
 def drawHistory(window):
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
     messages = ["Vous venez de lamentablement foirer vos partiels de",
-                "mi- semestre, et la suite semble mal embarquée :/",
+                "mi- semestre, et la suite semble mal embarquee :/",
                 "Votre derniere chance ?",
                 "",
                 "Obtenir 20/20 a tous les",
@@ -85,9 +85,9 @@ def drawHistory(window):
     historyheight = 120
     for i in range(len(messages)):
         
-        historytext = font.render(messages[i], False, (255, 255, 255))
+        historytext = infofont.render(messages[i], False, (255, 255, 255))
         historytext_rect = historytext.get_rect()
-        historytext_rect.topright = (window_width/2, historyheight)
+        historytext_rect.center = (window_width/2, historyheight)
         window.blit(historytext, historytext_rect)
         historyheight += 30
         
@@ -113,7 +113,7 @@ while run:
         compteur_bg = 0
         window.blit(startingBackground.subsurface(Rect(0, 0, 1024, 968)), (0, 0))
         window.blit(subtitle, startingsubtext_rect)
-        window.blit(iutlogo, (window_width, 50))
+        window.blit(iutlogo, (window_width/2, window_height/2))
         gamestate = GameState.WAITING_FOR_HISTORY
         
         
