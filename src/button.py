@@ -23,4 +23,16 @@ class Button():
                 print("Start button clicked")
                 action = True 
                 return action   
+            
+            
+    def isHovered(self):
+        action = False
+        pos = pygame.mouse.get_pos()
+        
+        if self.rect.collidepoint(pos):
+            action = True
+        return action      
+    
+    def setImage(self, image):
+        self.image = image
    

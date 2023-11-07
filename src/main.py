@@ -119,8 +119,22 @@ while run:
     elif(gamestate == GameState.HISTORY):
         clear(window)
         drawHistory(window)
-        gamestate = GameState.WAITING_FOR_START
-           
+        gamestate = GameState.WAITING_FOR_CHARACTER
+        
+    elif(gamestate == GameState.WAITING_FOR_CHARACTER):    
+        if startButton.isClicked():
+            gamestate = GameState.CHARACTER  
+            clear(window)
+            #Afficher ta fenêtre
+            
+     #elif(gamestate == GameState.CHARACTER):
+     #   if(btnSprite1.isHovered()){
+            #Changer le sprite du btn en blanc
+     #   } else #Changer le sprite du btn en noir
+     #   if(btnSprite2.isHovered()){
+            #Changer le sprite du btn en blanc
+     #   } else #Changer le sprite du btn en noir   
+        
         
     elif(gamestate == GameState.WAITING_FOR_START):    
         if startButton.isClicked():
