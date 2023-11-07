@@ -26,7 +26,7 @@ pygame.display.set_caption('Save The Exams')
 #Create landing text
 text = font.render("Save The Exams", False, (255, 255, 255))
 text_rect = text.get_rect()
-text_rect.center = (window_width/2, window_width/4)
+text_rect.center = (window_width/2, window_height/4)
 
 #starting background
 startingBackground = pygame.image.load("assets/bg/startbg.png")
