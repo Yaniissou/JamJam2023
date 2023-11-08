@@ -150,7 +150,7 @@ def playingMod(window,joueur) :
     clear(window)  
     window.blit(enemy.image,enemy.rect)
     window.blit(joueur.image,joueur.rect)
-    enemy.deplacer(joueur)
+    enemy.deplacer()
     joueur.deplacer()
     
         
