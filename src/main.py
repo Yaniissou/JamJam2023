@@ -62,8 +62,8 @@ startingsubtext_rect = subtitle.get_rect()
 startingtext_rect.center = (window_width/2, window_height/4)
 startingsubtext_rect.center = (window_width/2, window_height/3)
 images = [
-        pygame.image.load("assets/blanchon/Blanchon0.png"),
-        pygame.image.load("assets/blanchon/Blanchon1.png")
+        pygame.image.load("assets/blanchon/Blanchon00.png"),
+        pygame.image.load("assets/blanchon/Blanchon11.png")
         ]
 
 images_scream = [
@@ -275,11 +275,11 @@ def playingMod(window,joueur,gameloop) :
             window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
-        else:
+        """else:
             filter = pygame.surface.Surface((1024, 768))
             filter.fill(pygame.color.Color('White'))
             filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
-            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)"""
 def genererMur():
     
  while True:

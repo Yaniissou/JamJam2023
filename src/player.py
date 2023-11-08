@@ -10,12 +10,12 @@ class Player(pygame.sprite.Sprite):
         self.gender = gender
         if gender ==0:                      #0 si garcon et 1 si fille
             self.images = [
-                pygame.image.load("assets/player/Player0.png"),  # Image d'idle
-                pygame.image.load("assets/player/Player1.png"),  # Image d'idle
-                pygame.image.load("assets/player/Player2.png"),  # Walk cycle
-                pygame.image.load("assets/player/Player3.png"),  # Walk cycle
-                pygame.image.load("assets/player/Player4.png"),  # Walk cycle
-                pygame.image.load("assets/player/Player5.png")   # Walk cycle
+                pygame.image.load("assets/player/Player00.png"),  # Image d'idle
+                pygame.image.load("assets/player/Player11.png"),  # Image d'idle
+                pygame.image.load("assets/player/Player22.png"),  # Walk cycle
+                pygame.image.load("assets/player/Player33.png"),  # Walk cycle
+                pygame.image.load("assets/player/Player44.png"),  # Walk cycle
+                pygame.image.load("assets/player/Player55.png")   # Walk cycle
         ]
         elif gender == 1:
              self.images = [
