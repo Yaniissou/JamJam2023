@@ -12,3 +12,4 @@ class GameState(Enum):
     PLAYING = 7
     SCREAMER = 8
     END = 9
+    CREDITS = 10
