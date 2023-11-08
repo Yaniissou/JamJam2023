@@ -209,18 +209,16 @@ def playingMod(window,joueur,gameloop) :
         gagne = True
     for mur in murs:
         if joueur.rect.colliderect(mur.rect):
-            print("Collision avec le mur")
-
-            overlap_x = joueur.rect.width - abs(joueur.rect.centerx - mur.rect.centerx)
-            overlap_y = joueur.rect.height - abs(joueur.rect.centery - mur.rect.centery)
+            overlap_x = joueur.rect.width / 2 + mur.rect.width / 2 - abs(joueur.rect.centerx - mur.rect.centerx)
+            overlap_y = joueur.rect.height / 2 + mur.rect.height / 2 - abs(joueur.rect.centery - mur.rect.centery)
 
             if overlap_x < overlap_y:
-                if joueur.rect.x > 0:
+                if joueur.rect.centerx < mur.rect.centerx:
                     joueur.rect.right = mur.rect.left
                 else:
                     joueur.rect.left = mur.rect.right
             else:
-                if joueur.rect.y > 0:
+                if joueur.rect.centery < mur.rect.centery:
                     joueur.rect.bottom = mur.rect.top
                 else:
                     joueur.rect.top = mur.rect.bottom
