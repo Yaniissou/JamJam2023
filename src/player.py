@@ -38,16 +38,16 @@ class Player(pygame.sprite.Sprite):
     
     def deplacer(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and self.rect.x >0:
             self.rect.x -= self.vitesse
             self.animer()
-        elif keys[pygame.K_RIGHT]:
+        elif keys[pygame.K_RIGHT]and self.rect.x <1000:
             self.rect.x += self.vitesse
             self.animer()
-        elif keys[pygame.K_UP]:
+        elif keys[pygame.K_UP]and self.rect.y >0:
             self.rect.y -= self.vitesse
             self.animer()
-        elif keys[pygame.K_DOWN]:
+        elif keys[pygame.K_DOWN]and self.rect.y <744:
             self.rect.y += self.vitesse
             self.animer()
         else:
