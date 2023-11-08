@@ -110,7 +110,7 @@ def initWindow(window,firstRun):
     if(firstRun == False): 
         clear(window)
     else:
-        pygame.mixer.music.play()
+        start.play()
     window.blit(startingBackground.subsurface(Rect(0, 0, 1024, 968)), (0, 0))
     window.blit(startingtext, startingtext_rect)
     window.blit(subtitle, startingsubtext_rect)
