@@ -47,12 +47,15 @@ cle_usb = CleUSB(0, 0)
 #vars
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
+returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
 #bouton pour choisir genre
 btnSprite1 = Button(303, 520.4, pygame.image.load("assets/buttons/btnsprite.png"))
 btnSprite2 = Button(702, 520.4, pygame.image.load("assets/buttons/btnsprite.png"))
 startingtext = font.render("Save The Exams", False, (255, 255, 255))
 subtitle =  subfont.render("Infiltrez vous a l'IUT 2 pour sauver vos partiels", False, '#d3d3d3')
 iutlogo = pygame.image.load("assets/iut2logo_1.png")
+iutlogo_rect = iutlogo.get_rect()
+iutlogo_rect.center = (window_width/2, window_height/2.25)
 startingtext_rect = startingtext.get_rect()
 startingsubtext_rect = subtitle.get_rect()
 startingtext_rect.center = (window_width/2, window_height/4)
@@ -67,6 +70,7 @@ images_scream = [
         pygame.image.load("assets/blanchon/screamer/Blanchon1.png"),
         pygame.image.load("assets/blanchon/screamer/Blanchon2.png")
                 ]
+
 
 enemy = Enemy(800, 334, images)
 screamer_start_time = 0
@@ -102,11 +106,19 @@ def startGame(window):
     clear(window)   
     window.blit(ingameBackground, (0, 0)) 
     
-def initWindow(window):
+def initWindow(window,firstRun):
+    if(firstRun == False): 
+        clear(window)
+    else:
+        pygame.mixer.music.play()
+    window.blit(startingBackground.subsurface(Rect(0, 0, 1024, 968)), (0, 0))
     window.blit(startingtext, startingtext_rect)
+    window.blit(subtitle, startingsubtext_rect)
+    window.blit(iutlogo, iutlogo_rect)
+
     startButton.draw(window)
     start.play()
-        
+
         
 def drawHistory(window):
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
@@ -135,6 +147,7 @@ def drawHistory(window):
         window.blit(historytext, historytext_rect)
         historyheight += 30
         
+    returnButton.draw(window)
     startButton.draw(window) 
     
     
@@ -175,6 +188,7 @@ def drawCharacter(window) :
     window.blit(imagesprite2,(482,  184))
     btnSprite1.draw(window)
     btnSprite2.draw(window)
+    returnButton.draw(window)
     window.blit(textsprite1, textsprite1_rect)
     window.blit(textsprite2, textsprite2_rect)
     
@@ -290,31 +304,19 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-            
     if(gamestate == GameState.INITIATING):
         #draw background
-        initWindow(window)
-        compteur_bg = 0
-        window.blit(startingBackground.subsurface(Rect(0, 0, 1024, 968)), (0, 0))
-        window.blit(subtitle, startingsubtext_rect)
-        window.blit(iutlogo, (window_width/2, window_height/2))
+        initWindow(window,True)
+        
         gamestate = GameState.WAITING_FOR_HISTORY
         
         
     elif(gamestate == GameState.WAITING_FOR_HISTORY):
-        compteur_bg += 968
-        if compteur_bg == 17424:
-            compteur_bg = 0
-        window.blit(startingBackground.subsurface(Rect(0, compteur_bg, 1024, 968)), (0, 0))
-        window.blit(startingtext, startingtext_rect)
-        window.blit(iutlogo, (window_height/2, window_height/2))
-        window.blit(subtitle, startingsubtext_rect)
-        startButton.draw(window) 
-
         if startButton.isClicked():
             gamestate = GameState.HISTORY
             print("Start button clicked")
             pygame.mouse.set_pos(window_width/2, window_height/2)
+        
     
     elif(gamestate == GameState.HISTORY):
         clear(window)
@@ -329,7 +331,10 @@ while run:
             gamestate = GameState.CHARACTER  
             clear(window)
             #Afficher ta fenêtre
-            drawCharacter(window)    
+            drawCharacter(window)
+        if returnButton.isClicked():
+            initWindow(window,False) 
+            gamestate = GameState.WAITING_FOR_HISTORY
             
     elif(gamestate == GameState.CHARACTER):
         
@@ -341,6 +346,11 @@ while run:
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(512, 354, 1)
+        elif returnButton.isClicked():
+            clear(window)
+            drawHistory(window) 
+            gamestate = GameState.WAITING_FOR_CHARACTER  
+            pygame.mouse.set_pos(window_width/2, window_height/2)  
             
     elif gamestate == GameState.PLAYING:
         playingMod(window, joueur)        
