@@ -46,8 +46,10 @@ def main():
                     error_count += 1
 
                 if error_count >= 2:
-                    print("Trop d'erreurs, la musique s'arrête.")
-                    running = False
+                    font = pygame.font.Font("fonts/Minecraft.ttf", 72)
+                    texte = font.render("Partie perdue !", True, (0, 0, 0))
+                    screen.blit(texte, (800 // 2 - texte.get_width() // 2, 600 // 2 - texte.get_height() // 2))
+                    pygame.mixer.music.stop()
 
                 last_beat_time = current_time
 
