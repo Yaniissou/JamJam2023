@@ -48,6 +48,7 @@ cle_usb = CleUSB(0, 0)
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
+gameloop = 0
 #bouton pour choisir genre
 btnSprite1 = Button(303, 520.4, pygame.image.load("assets/buttons/btnsprite.png"))
 btnSprite2 = Button(702, 520.4, pygame.image.load("assets/buttons/btnsprite.png"))
@@ -162,13 +163,13 @@ def drawCharacter(window) :
     text_rect.center = (window_width/2, window_height/4 -100)
     
 
-    textsprite1 = fontsprite.render("Sprite 1", False, (255, 255, 255))
+    textsprite1 = fontsprite.render("Franck", False, (255, 255, 255))
     textsprite1_rect = textsprite1.get_rect()
-    textsprite1_rect.center = (310,494.4)
+    textsprite1_rect.center = (315,490)
 
-    textsprite2 = fontsprite.render("Sprite 2", False, (255, 255, 255))
+    textsprite2 = fontsprite.render("Gaelle", False, (255, 255, 255))
     textsprite2_rect = textsprite1.get_rect()
-    textsprite2_rect.center = (707, 494.4)
+    textsprite2_rect.center = (720, 490)
 
     imagesprite1 = pygame.image.load("assets/player/Player1Icon.png")
     imagesprite2 = pygame.image.load("assets/playerFemale/PlayerFemaleIcon.png")
@@ -194,10 +195,12 @@ def drawCharacter(window) :
     
     
 
-def playingMod(window,joueur) :
+def playingMod(window,joueur,gameloop) :
+    
     clear(window)  
     start.stop()
-    gameMusic.play()
+    if gameloop == 0:
+        gameMusic.play()
     joueur.deplacer()
     global screamer_start_time
     global run
@@ -353,7 +356,8 @@ while run:
             pygame.mouse.set_pos(window_width/2, window_height/2)  
             
     elif gamestate == GameState.PLAYING:
-        playingMod(window, joueur)        
+        playingMod(window, joueur, gameloop)    
+        gameloop += 1;    
         
     
     
