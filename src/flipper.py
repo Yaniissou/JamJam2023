@@ -98,20 +98,26 @@ clock = pygame.time.Clock()
 
 gagne = False
 
+#chargement de la musique du jeu
 pygame.mixer.music.load("assets/sounds/musics/game_theme.ogg")
 pygame.mixer.music.play()
-debut_musique = pygame.time.get_ticks()
+
+temps_ecoule = 0
+
 
 while True:
     
     clock.tick(60)
-    temps_actuel = pygame.time.get_ticks() - debut_musique
+    
+    temps_ecoule += clock.get_time()
+    
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    if not gagne:  
+    if not gagne:
         old_rect_position = joueur.rect.copy()
 
         touches = pygame.key.get_pressed()
@@ -120,7 +126,6 @@ while True:
 
         joueur.deplacer(dx, dy)
         
-
         for mur in murs:
             if joueur.rect.colliderect(mur.rect):
                 joueur.rect = old_rect_position
@@ -138,9 +143,6 @@ while True:
         fenetre.blit(mur.image, mur.rect)
     fenetre.blit(joueur.image, joueur.rect)
     
-    
-        
-        
     if gagne:  
         font = pygame.font.Font("fonts/Minecraft.ttf", 72)
         texte = font.render("Partie gagnee !", True, (0, 0, 0))
