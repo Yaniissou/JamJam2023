@@ -58,7 +58,7 @@ for _ in range(nb_murs):  # Changer le nombre de murs si besoin
     x = random.randint(0, screen_width - image_mur.get_width())
     y = random.randint(0, screen_height - image_mur.get_height())
     
-    # Vérifier la distance avec les murs existants
+    # Vérifier la distance avec les murs existants, pour ne pas les superposer
     collision = False
     for mur in murs:
         distance_x = abs(mur.rect.x - x)
@@ -96,40 +96,40 @@ joueur = Joueur(50, 50)
 # Boucle principale du jeu
 clock = pygame.time.Clock()
 
+gagne = False
+
+pygame.mixer.music.load("assets/sounds/musics/game_theme.ogg")
+pygame.mixer.music.play()
+debut_musique = pygame.time.get_ticks()
 
 while True:
+    
     clock.tick(60)
+    temps_actuel = pygame.time.get_ticks() - debut_musique
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    touches = pygame.key.get_pressed()
-    dx = (touches[pygame.K_RIGHT] - touches[pygame.K_LEFT]) * joueur.vitesse
-    dy = (touches[pygame.K_DOWN] - touches[pygame.K_UP]) * joueur.vitesse
+    if not gagne:  
+        old_rect_position = joueur.rect.copy()
 
-    joueur.deplacer(dx, dy)
-    
-    if cle_usb.check_collision(joueur):
-        print("Partie gagnée")
+        touches = pygame.key.get_pressed()
+        dx = (touches[pygame.K_RIGHT] - touches[pygame.K_LEFT]) * joueur.vitesse
+        dy = (touches[pygame.K_DOWN] - touches[pygame.K_UP]) * joueur.vitesse
 
-    for mur in murs:
-        if joueur.rect.colliderect(mur.rect):
-            print("Collision avec le mur")
+        joueur.deplacer(dx, dy)
+        
 
-            overlap_x = joueur.rect.width - abs(joueur.rect.centerx - mur.rect.centerx)
-            overlap_y = joueur.rect.height - abs(joueur.rect.centery - mur.rect.centery)
+        for mur in murs:
+            if joueur.rect.colliderect(mur.rect):
+                joueur.rect = old_rect_position
 
-            if overlap_x < overlap_y:
-                if dx > 0:
-                    joueur.rect.right = mur.rect.left
-                else:
-                    joueur.rect.left = mur.rect.right
-            else:
-                if dy > 0:
-                    joueur.rect.bottom = mur.rect.top
-                else:
-                    joueur.rect.top = mur.rect.bottom
+        if cle_usb.check_collision(joueur):
+            print("Partie gagnée")
+            gagne = True
+            
+            
 
     fenetre.blit(image_bg, (0, 0))
     fenetre.blit(cle_usb.image, cle_usb.rect)
@@ -138,10 +138,18 @@ while True:
         fenetre.blit(mur.image, mur.rect)
     fenetre.blit(joueur.image, joueur.rect)
     
-   
-    filter = pygame.surface.Surface((screen_width, screen_height))
-    filter.fill(pygame.color.Color('White'))
-    filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
-    fenetre.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+    
+        
+        
+    if gagne:  
+        font = pygame.font.Font("fonts/Minecraft.ttf", 72)
+        texte = font.render("Partie gagnee !", True, (0, 0, 0))
+        fenetre.blit(texte, (screen_width // 2 - texte.get_width() // 2, screen_height // 2 - texte.get_height() // 2))
+        pygame.mixer.music.stop()
+    else:
+        filter = pygame.surface.Surface((screen_width, screen_height))
+        filter.fill(pygame.color.Color('White'))
+        filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
+        fenetre.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)    
 
     pygame.display.flip()
