@@ -102,16 +102,12 @@ gagne = False
 pygame.mixer.music.load("assets/sounds/musics/game_theme.ogg")
 pygame.mixer.music.play()
 
-temps_ecoule = 0
 
 
 while True:
     
     clock.tick(60)
-    
-    temps_ecoule += clock.get_time()
-    
-    
+     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -148,10 +144,10 @@ while True:
         texte = font.render("Partie gagnee !", True, (0, 0, 0))
         fenetre.blit(texte, (screen_width // 2 - texte.get_width() // 2, screen_height // 2 - texte.get_height() // 2))
         pygame.mixer.music.stop()
-    else:
+    """else:
         filter = pygame.surface.Surface((screen_width, screen_height))
         filter.fill(pygame.color.Color('White'))
         filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
-        fenetre.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)    
+        fenetre.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)"""    
 
     pygame.display.flip()
