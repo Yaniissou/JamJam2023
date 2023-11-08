@@ -3,7 +3,10 @@ from pygame.locals import *
 from gamestate import GameState
 from button import Button
 from player import Player
-
+from enemy import Enemy
+import random
+from usb import CleUSB
+from mur import Mur
 #inits
 pygame.init()
 pygame.font.init()
@@ -14,11 +17,33 @@ font = pygame.font.Font("fonts/Minecraft.ttf", 72)
 subfont = pygame.font.Font("fonts/Minecraft.ttf", 36)
 favicon = pygame.image.load("assets/favicon/favicon.png")
 pygame.display.set_icon(favicon)
-
+#element pour labyrinthe
+image_bg = pygame.image.load("assets/bg/bg.png")
+lampe = pygame.image.load('assets/elements/circle.png')
 #define dimensions
 window_width = 1024
 window_height = 768
+# Générer les murs
+murs = []
+nb_murs = 60
+for _ in range(nb_murs):  # Changer le nombre de murs si besoin
+    x = random.randint(0, 1024 - 32)
+    y = random.randint(0, 768 - 32)
+    
+    # Vérifier la distance avec les murs existants
+    collision = False
+    for mur in murs:
+        distance_x = abs(mur.rect.x - x)
+        distance_y = abs(mur.rect.y - y)
+        if distance_x < 32 or distance_y < 32:
+            collision = True
+            break
+    
+    if not collision:
+        murs.append(Mur(x, y))
 
+# Générer la clé USB
+cle_usb = CleUSB(0, 0)
 #vars
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
@@ -35,8 +60,23 @@ startingtext_rect = startingtext.get_rect()
 startingsubtext_rect = subtitle.get_rect()
 startingtext_rect.center = (window_width/2, window_height/4)
 startingsubtext_rect.center = (window_width/2, window_height/3)
+images = [
+        pygame.image.load("assets/blanchon/Blanchon0.png"),
+        pygame.image.load("assets/blanchon/Blanchon1.png")
+        ]
+
+images_scream = [
+        pygame.image.load("assets/blanchon/screamer/Blanchon0.png"),
+        pygame.image.load("assets/blanchon/screamer/Blanchon1.png"),
+        pygame.image.load("assets/blanchon/screamer/Blanchon2.png")
+                ]
 
 
+enemy = Enemy(800, 334, images)
+screamer_start_time = 0
+darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
+gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
+gagne =False
 #create the window
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption('Save The Exams')
@@ -47,7 +87,7 @@ pygame.display.set_caption('Save The Exams')
 startingBackground = pygame.image.load("assets/bg/loop.jpg")
 #ingame background
 ingameBackground = pygame.image.load("assets/bg/bg.png")
-pygame.mixer.music.load("assets/sounds/musics/starting.ogg")
+start = pygame.mixer.Sound("assets/sounds/musics/starting.ogg")
 
 
 
@@ -77,10 +117,8 @@ def initWindow(window,firstRun):
     window.blit(iutlogo, iutlogo_rect)
 
     startButton.draw(window)
+    start.play()
 
-    
-    
-        
         
 def drawHistory(window):
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
@@ -112,6 +150,8 @@ def drawHistory(window):
     returnButton.draw(window)
     startButton.draw(window) 
     
+    
+screamer_start_time = 0    
 def drawCharacter(window) :
     fontsprite = pygame.font.Font("fonts/Minecraft.ttf", 26)
 
@@ -130,8 +170,8 @@ def drawCharacter(window) :
     textsprite2_rect = textsprite1.get_rect()
     textsprite2_rect.center = (707, 494.4)
 
-    imagesprite1 = pygame.image.load("assets/player/Player0.png")
-    imagesprite2 = pygame.image.load("assets/playerFemale/PlayerFemale0.png")
+    imagesprite1 = pygame.image.load("assets/player/Player1Icon.png")
+    imagesprite2 = pygame.image.load("assets/playerFemale/PlayerFemaleIcon.png")
 
     #surface1 = pygame.Surface((200, 300))
     #surface1.fill((150, 150, 150))
@@ -156,19 +196,114 @@ def drawCharacter(window) :
 
 def playingMod(window,joueur) :
     clear(window)  
-    window.blit(joueur.image,joueur.rect)
-    
+    start.stop()
+    gameMusic.play()
     joueur.deplacer()
+    global screamer_start_time
+    global run
+    global gagne
+    if cle_usb.check_collision(joueur):
+        print("Partie gagnée")
+        gagne = True
+    for mur in murs:
+        if joueur.rect.colliderect(mur.rect):
+            print("Collision avec le mur")
+
+            overlap_x = joueur.rect.width - abs(joueur.rect.centerx - mur.rect.centerx)
+            overlap_y = joueur.rect.height - abs(joueur.rect.centery - mur.rect.centery)
+
+            if overlap_x < overlap_y:
+                if joueur.rect.x > 0:
+                    joueur.rect.right = mur.rect.left
+                else:
+                    joueur.rect.left = mur.rect.right
+            else:
+                if joueur.rect.y > 0:
+                    joueur.rect.bottom = mur.rect.top
+                else:
+                    joueur.rect.top = mur.rect.bottom
+
+    window.blit(image_bg, (0, 0))
+    
+    for mur in murs:
+        window.blit(mur.image, mur.rect)
+    window.blit(cle_usb.image, cle_usb.rect)
+    # Ajouter le code pour la lampe torche ici
+    
+    
+    if enemy.rect.colliderect(joueur.rect):
+        
+        if screamer_start_time == 0:
+            # En cas de collision, réinitialisez les positions des personnages en haut à gauche
+            joueur.rect.topleft = (0, 0)
+            enemy.rect.topleft = (0, 0)
+
+            # Commencez l'animation du screamer
+            screamer_start_time = pygame.time.get_ticks()  # Enregistrez le moment où l'animation du screamer commence
+            darwinmp3.play()
+            joueur.arreter_animation()
         
 
+        # Obtenez le temps écoulé depuis le début de l'animation
+        current_time = pygame.time.get_ticks()
+        elapsed_time = current_time - screamer_start_time
+
+        # Alternez les couleurs de fond entre noir et rouge pendant l'animation du screamer
+        
+        if (elapsed_time // 250) % 2 == 0:
+            background_color = (0, 0, 0)
+        else:
+            background_color = (255, 0, 0)
+        
+        window.fill(background_color)
+        window.blit(images_scream[0], (150, 30))
+        pygame.display.update()
+
+        if elapsed_time > 2000:  # Arrêtez l'effet après 2 secondes (ajustez le temps si nécessaire)
+            run = False
+    else:
+        enemy.deplacer(joueur)
+        joueur.deplacer()
+        window.blit(enemy.image, enemy.rect)  
+        window.blit(joueur.image, joueur.rect)       
+            
+        if gagne:  
+            font = pygame.font.Font("fonts/Minecraft.ttf", 72)
+            texte = font.render("Partie gagnee !", True, (0, 0, 0))
+            window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
+            joueur.arreter_animation()
+            gameMusic.stop()
+        else:
+            filter = pygame.surface.Surface((1024, 768))
+            filter.fill(pygame.color.Color('White'))
+            filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
+            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+def genererMur():
+    
+ while True:
+    x = random.randint(0, 1024 - 28)
+    y = random.randint(0, 768 - 20)
+    cle_usb.rect.topleft = (x, y)
+
+    # Vérifier la distance avec les murs
+    collision = False
+    for mur in murs:
+        distance_x = abs(mur.rect.x - x)
+        distance_y = abs(mur.rect.y - y)
+        if distance_x < 32 or distance_y < 32:
+            collision = True
+            break
+    
+    if not collision:
+        break    
 
 #main loop
-
+genererMur()
 while run:
     clock.tick(60)
-
-
-    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
     if(gamestate == GameState.INITIATING):
         #draw background
         initWindow(window,True)
@@ -235,9 +370,7 @@ while run:
 
 
     
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+    
             
       
         
