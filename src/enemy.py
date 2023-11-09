@@ -13,7 +13,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.vitesse = 5
+        self.vitesse = 3
         self.animation_speed = 2  # Vitesse d'animation (plus le nombre est élevé, plus l'animation est lente)
         self.animation_counter = 0
         

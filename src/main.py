@@ -426,6 +426,26 @@ def playingMod(window,joueur,gameloop) :
         filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
         window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
     return GameState.PLAYING    
+def reset_game():
+    global screamer_start_time, run, gagne, key_pressed, last_beat_time, error_count, gameloop,ennemies
+    screamer_start_time = 0
+    run = True
+    gagne = False
+    key_pressed = False
+    last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
+    error_count = 0
+    gameloop = 0
+    ennemies = [
+        Enemy(800, 334, images),
+        Enemy(700, 500, images),
+        Enemy(600, 200, images),
+        Enemy(200, 500, images),
+        Enemy(700, 800, images),
+        Enemy(300, 500, images),
+        Enemy(400, 600, images),
+        Enemy(400, 200, images)
+    ]
+    genererMur()
 def genererMur():
     
  while True:
@@ -516,7 +536,8 @@ while run:
     elif gamestate == GameState.PLAYING:
         gamestate = playingMod(window, joueur, gameloop)    
         gameloop += 1;    
-        
+        if gamestate == GameState.VICTORY or gamestate == GameState.LOSER:
+            reset_game()
     
     
         
