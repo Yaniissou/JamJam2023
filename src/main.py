@@ -11,9 +11,18 @@ import time #pour gerer le rythme
 import argparse
 
 parser = argparse.ArgumentParser(description='Jeu "Save The Exams"')
-parser.add_argument('-l', '--lampe', action='store_true', help='Desactiver la lampe torche')
+parser.add_argument('-l', '--lampe', action='store_true', help='Desactive la lampe torche')
+parser.add_argument('-d', '--difficile', action='store_true', help='Diminue la tolérence d\'erreur du timing (0.12ms)')
+parser.add_argument('-f', '--facile', action='store_true', help='Augmente la tolérence d\'erreur du timing (0.05ms)')
+parser.add_argument('-g', '--god', action='store_true', help='Seulement si vous avez le rythme dans la peau ! (0.03ms)')
+
+
 args = parser.parse_args()
 not_use_torch = args.lampe
+hard_timing = args.difficile
+ez_timing = args.facile
+god_timing = args.god
+
 
 pygame.init()
 pygame.font.init()
@@ -28,7 +37,9 @@ pygame.display.set_icon(favicon)
 
 #sol de l'iut et lampe torche
 image_bg = pygame.image.load("assets/bg/bg.png")
-lampe = pygame.image.load('assets/elements/circleTest.png')
+
+lampe = pygame.image.load('assets/elements/circle200.png')
+
 
 #dimensions de la fenetre
 window_width = 1024
@@ -112,13 +123,25 @@ ennemies.append(enemy8)
 #parametres de gestion du rythme
 BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
-BEAT_TOLERANCE = 5  # Tolerance de mauvais timing
+
+
+
+if hard_timing:
+    BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
+elif ez_timing:
+   BEAT_TOLERANCE = 0.12
+elif god_timing:
+    BEAT_TOLERANCE = 0.03
+else:
+    BEAT_TOLERANCE = 0.08 
+
 key_pressed = False
 last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
 error_count = 0 #nombre d'erreurs de timing autorisé
 screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
+click = pygame.mixer.Sound("assets/sounds/menus/click.mp3")
 gagne =False
 
 window = pygame.display.set_mode((window_width, window_height))
@@ -232,7 +255,7 @@ def drawCredits(window):
                   [pygame.image.load("assets/credits/antoine.png"), "Antoine HUGUET", "Animator"]
                  ]
 
-    musics = ["https://www.youtube.com/watch?v=CqJ95-zjvK0","https://www.youtube.com/watch?v=uQbzK4OROjQ", "Herve Blanchon"]
+    musics = ["https://www.youtube.com/watch?v=CqJ95-zjvK0","https://www.youtube.com/watch?v=uQbzK4OROjQ", "https://pixabay.com", "Herve Blanchon"]
     images = ["https://www.pixelicious.xyz", "https://www.dafont.com/fr/minecraft.font"]
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 15)
     titlefont = pygame.font.Font("fonts/Minecraft.ttf", 27)
@@ -636,18 +659,19 @@ while run:
     elif(gamestate == GameState.WAITING_FOR_HISTORY):
         if startButton.isClicked():
             gamestate = GameState.HISTORY
+            click.play()
            
             pygame.mouse.set_pos(window_width/2, window_height/2)
         elif creditButton.isClicked():
             gamestate = GameState.CREDITS
-           
+            click.play()
             
     elif(gamestate == GameState.CREDITS):
         drawCredits(window)
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
-        
+            click.play()
     
     elif(gamestate == GameState.HISTORY):
         clear(window)
@@ -662,11 +686,13 @@ while run:
             gamestate = GameState.CHARACTER  
             
             #Afficher ta fenêtre
-            
+            drawCharacter(window)
+            click.play()
             
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
+            click.play()
             
     elif(gamestate == GameState.CHARACTER):
         clear(window)
@@ -679,18 +705,21 @@ while run:
             gamestate = GameState.CHOOSE_MAP
             clear(window)
             joueur = Player(100, 100, 0)
+            click.play()
             #murs = appendMurs(nb_murs)
         elif btnSprite2.isClicked():
             gamestate = GameState.CHOOSE_MAP
             clear(window)
             joueur = Player(100, 100, 1)
+            click.play()
             #murs = appendMurs(nb_murs)
         elif returnButton.isClicked():
             clear(window)
             drawHistory(window) 
             gamestate = GameState.WAITING_FOR_CHARACTER  
-            pygame.mouse.set_pos(window_width/2, window_height/2)     
-            
+            pygame.mouse.set_pos(window_width/2, window_height/2)  
+            click.play()
+
             
                  
     elif gamestate == GameState.PLAYING:
@@ -728,6 +757,7 @@ while run:
         if startButton.isClicked():
             gamestate = GameState.START  
             print("Start button clicked") 
+            click.play()
             pygame.mixer.music.stop()
     
     elif(gamestate == GameState.START):
@@ -738,6 +768,9 @@ while run:
         startGame(window)
         gamestate = GameState.PLAYINGLABY
             
+
+        
+
     elif(gamestate == GameState.VICTORY):   
          
         texte = font.render("Partie gagnee !", True, (255, 255, 255))
@@ -752,6 +785,7 @@ while run:
             gamestate = GameState.INITIATING
             print("End button clicked")
             pygame.mouse.set_pos(window_width/2, window_height/2) 
+            click.play()
     
     elif(gamestate == GameState.LOSER):
         texte = font.render("Partie perdue !", True, (255, 255, 255))
