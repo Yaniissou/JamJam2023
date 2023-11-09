@@ -142,6 +142,7 @@ screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
 click = pygame.mixer.Sound("assets/sounds/menus/click.mp3")
+wrongmove = pygame.mixer.Sound("assets/sounds/game_over/wrongmove.mp3")
 gagne =False
 
 window = pygame.display.set_mode((window_width, window_height))
@@ -391,7 +392,9 @@ def playingMod(window,joueur,gameloop) :
                         print("Mauvais timing")
   
                     if error_count >= 2:
+                        wrongmove.play()
                         return GameState.LOSER
+                        
 
                     last_beat_time = current_time
     elif event.type == pygame.KEYUP:
