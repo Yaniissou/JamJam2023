@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.vitesse = 10
+        self.vitesse = 7
         self.animation_speed = 2  # Vitesse d'animation (plus le nombre est élevé, plus l'animation est lente)
         self.animation_counter = 0  # Compteur pour gérer l'animation
 

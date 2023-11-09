@@ -95,7 +95,7 @@ ennemies.append(enemy7)
 ennemies.append(enemy8)
 BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
-BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
+BEAT_TOLERANCE = 0.08  # Tolerance de mauvais timing
 key_pressed = False
 last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
 error_count = 0
