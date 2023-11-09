@@ -216,7 +216,7 @@ def drawCredits(window):
                  ]
 
     musics = ["https://www.youtube.com/watch?v=CqJ95-zjvK0","https://www.youtube.com/watch?v=uQbzK4OROjQ", "Herve Blanchon"]
-    images = ["https://www.pixelicious.xyz"]
+    images = ["https://www.pixelicious.xyz", "https://www.dafont.com/fr/minecraft.font"]
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 15)
     titlefont = pygame.font.Font("fonts/Minecraft.ttf", 27)
     subtitlefont = pygame.font.Font("fonts/Minecraft.ttf", 22)
