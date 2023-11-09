@@ -8,6 +8,12 @@ import random #pour generer la position x et y des objets de manière aléatoire
 from usb import CleUSB
 from mur import Mur
 import time #pour gerer le rythme
+import argparse
+
+parser = argparse.ArgumentParser(description='Jeu "Save The Exams"')
+parser.add_argument('-l', '--lampe', action='store_true', help='Desactiver la lampe torche')
+args = parser.parse_args()
+not_use_torch = args.lampe
 
 pygame.init()
 pygame.font.init()
@@ -449,10 +455,11 @@ def playingMod(window,joueur,gameloop) :
             joueur.arreter_animation()
             gameMusic.stop()
     else: #code pour activer/desactiver la lampe torche
-        filter = pygame.surface.Surface((1024, 768))
-        filter.fill(pygame.color.Color('White'))
-        filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
-        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+        if not not_use_torch:
+            filter = pygame.surface.Surface((1024, 768))
+            filter.fill(pygame.color.Color('White'))
+            filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
+            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
     return GameState.PLAYING    
 #remise des parametres du jeu à leur etat initial en cas de restart
 def reset_game():
