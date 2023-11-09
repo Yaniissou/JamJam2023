@@ -317,6 +317,21 @@ def playingMod(window,joueur,gameloop) :
     
     
     for enemy in ennemies:
+        for mur in murs:
+            if enemy.rect.colliderect(mur.rect):
+                overlap_x = enemy.rect.width / 2 + mur.rect.width / 2 - abs(enemy.rect.centerx - mur.rect.centerx)
+                overlap_y = enemy.rect.height / 2 + mur.rect.height / 2 - abs(enemy.rect.centery - mur.rect.centery)
+
+                if overlap_x < overlap_y:
+                    if enemy.rect.centerx < mur.rect.centerx:
+                        enemy.rect.right = mur.rect.left
+                    else:
+                        enemy.rect.left = mur.rect.right
+                else:
+                    if enemy.rect.centery < mur.rect.centery:
+                        enemy.rect.bottom = mur.rect.top
+                    else:
+                        enemy.rect.top = mur.rect.bottom
         if enemy.rect.colliderect(joueur.rect):
         
             if screamer_start_time == 0:
