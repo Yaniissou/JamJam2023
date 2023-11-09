@@ -498,7 +498,8 @@ def iterate(line):
         
 def genererLabyLevel():
     global level
-    with open("assets/labyrinthe/level.txt") as level_file:
+    i = random.randint(1, 4)
+    with open(f"assets/labyrinthe/level{i}.txt") as level_file:
         line_file = level_file.readline()
         line_number = 0
         while line_file:
