@@ -142,19 +142,23 @@ def initWindow(window,firstRun):
         
 def drawHistory(window):
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
-    messages = ["Vous venez de lamentablement foirer vos partiels de mi- semestre,",
+    messages = ["Histoire", "", "Vous venez de lamentablement foirer vos partiels de mi- semestre,",
                 "et la suite semble mal embarquee :/",
                 "Votre derniere chance ?",
                 "Obtenir 20/20 a tous les examens de la prochaine semaine de partiels !",
-                "",
+                
                 "Alors que vous aviez abandonne tout espoir, une rumeur commence a se propager dans l'IUT:",
-                "",
+                
                 "Il existerait une clef USB secrete dans le bureau 101,",
                 "regroupant l'integralite des prochains examens...",
                 "Votre objectif ?", "Muni d'une lampe torche, vous ",
                 "infiltrez l'IUT de nuit pour recuperer la fameuse clef.",
                 "Mais attention, des choses etranges se produisent",
                 "en dehors des heures d'ouverture..."]
+    
+    messages2 = ["test", "ok", "123"]
+    
+    
     clear(window)
     window.fill((0, 0, 0))
     historyheight = 120
@@ -165,6 +169,14 @@ def drawHistory(window):
         historytext_rect.center = (window_width / 2, historyheight)
         window.blit(historytext, historytext_rect)
         historyheight += 30
+    
+    for i in range(len(messages2)):
+        
+        rulestext = infofont.render(messages2[i], False, (255, 255, 255))
+        rulestext_rect = rulestext.get_rect()
+        rulestext_rect.center = (window_width / 2, historyheight)
+        window.blit(rulestext, rulestext_rect)
+        historyheight += 30    
         
     returnButton.draw(window)
     startButton.draw(window) 
