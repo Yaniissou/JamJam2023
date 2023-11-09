@@ -541,6 +541,7 @@ def playingModLabyrinthe(window,joueur,gameloop):
                         print("Mauvais timing")
   
                     if error_count >= 2:
+                        wrongmove.play()
                         return GameState.LOSER
 
                     last_beat_time = current_time
