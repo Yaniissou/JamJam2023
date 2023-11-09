@@ -19,19 +19,19 @@ class Player(pygame.sprite.Sprite):
         ]
         elif gender == 1:
              self.images = [
-                pygame.image.load("assets/playerFemale/PlayerFemal0.png"),  # Image d'idle
-                pygame.image.load("assets/playerFemale/PlayerFemal1.png"),  # Image d'idle
-                pygame.image.load("assets/playerFemale/PlayerFemal2.png"),  # Walk cycle
-                pygame.image.load("assets/playerFemale/PlayerFemal3.png"),  # Walk cycle
-                pygame.image.load("assets/playerFemale/PlayerFemal4.png"),  # Walk cycle
-                pygame.image.load("assets/playerFemale/PlayerFemal5.png")   # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale00.png"),  # Image d'idle
+                pygame.image.load("assets/playerFemale/PlayerFemale11.png"),  # Image d'idle
+                pygame.image.load("assets/playerFemale/PlayerFemale22.png"),  # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale33.png"),  # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale44.png"),  # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale55.png")   # Walk cycle
             ]   
             # Ajoutez les autres images d'animation
         self.image_index = 0  # Indice de l'image en cours
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.vitesse = 3
+        self.vitesse = 1
         self.animation_speed = 2  # Vitesse d'animation (plus le nombre est élevé, plus l'animation est lente)
         self.animation_counter = 0  # Compteur pour gérer l'animation
 

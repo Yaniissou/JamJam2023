@@ -19,7 +19,7 @@ favicon = pygame.image.load("assets/favicon/favicon.png")
 pygame.display.set_icon(favicon)
 #element pour labyrinthe
 image_bg = pygame.image.load("assets/bg/bg.png")
-lampe = pygame.image.load('assets/elements/circle.png')
+lampe = pygame.image.load('assets/elements/circleTest.png')
 #define dimensions
 window_width = 1024
 window_height = 768
@@ -73,7 +73,24 @@ images_scream = [
                 ]
 
 
+ennemies = []
 enemy = Enemy(800, 334, images)
+enemy2 = Enemy(700, 500, images)
+enemy3 = Enemy(600, 200, images)
+enemy4 = Enemy(200, 500, images)
+enemy5 = Enemy(700, 800, images)
+enemy6 = Enemy(300, 500, images)
+enemy7 = Enemy(400, 600, images)
+enemy8 = Enemy(400, 200, images)
+ennemies.append(enemy)
+ennemies.append(enemy2)
+ennemies.append(enemy3)
+ennemies.append(enemy4)
+ennemies.append(enemy5)
+ennemies.append(enemy6)
+ennemies.append(enemy7)
+ennemies.append(enemy8)
+
 screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
@@ -231,53 +248,54 @@ def playingMod(window,joueur,gameloop) :
     # Ajouter le code pour la lampe torche ici
     
     
-    if enemy.rect.colliderect(joueur.rect):
+    for enemy in ennemies:
+        if enemy.rect.colliderect(joueur.rect):
         
-        if screamer_start_time == 0:
-            # En cas de collision, réinitialisez les positions des personnages en haut à gauche
-            joueur.rect.topleft = (0, 0)
-            enemy.rect.topleft = (0, 0)
+            if screamer_start_time == 0:
+                # En cas de collision, réinitialisez les positions des personnages en haut à gauche
+                joueur.rect.topleft = (0, 0)
+                enemy.rect.topleft = (0, 0)
 
-            # Commencez l'animation du screamer
-            screamer_start_time = pygame.time.get_ticks()  # Enregistrez le moment où l'animation du screamer commence
-            darwinmp3.play()
-            joueur.arreter_animation()
+                # Commencer l'animation du screamer
+                screamer_start_time = pygame.time.get_ticks()  # Enregistrez le moment où l'animation du screamer commence
+                darwinmp3.play()
+                joueur.arreter_animation()
         
 
-        # Obtenez le temps écoulé depuis le début de l'animation
-        current_time = pygame.time.get_ticks()
-        elapsed_time = current_time - screamer_start_time
+            # Obtenez le temps écoulé depuis le début de l'animation
+            current_time = pygame.time.get_ticks()
+            elapsed_time = current_time - screamer_start_time
 
-        # Alternez les couleurs de fond entre noir et rouge pendant l'animation du screamer
+            # Alternez les couleurs de fond entre noir et rouge pendant l'animation du screamer
         
-        if (elapsed_time // 250) % 2 == 0:
-            background_color = (0, 0, 0)
-        else:
-            background_color = (255, 0, 0)
+            if (elapsed_time // 250) % 2 == 0:
+                background_color = (0, 0, 0)
+            else:
+                background_color = (255, 0, 0)
         
-        window.fill(background_color)
-        window.blit(images_scream[0], (150, 30))
-        pygame.display.update()
+            window.fill(background_color)
+            window.blit(images_scream[0], (150, 30))
+            pygame.display.update()
 
-        if elapsed_time > 2000:  # Arrêtez l'effet après 2 secondes (ajustez le temps si nécessaire)
-            run = False
-    else:
-        enemy.deplacer(joueur)
-        joueur.deplacer()
-        window.blit(enemy.image, enemy.rect)  
-        window.blit(joueur.image, joueur.rect)       
+            if elapsed_time > 2000:  # Arrêtez l'effet après 2 secondes (ajustez le temps si nécessaire)
+                run = False
+        elif not enemy.rect.colliderect(joueur.rect):
+            enemy.deplacer(joueur)
+            joueur.deplacer()
+            window.blit(enemy.image, enemy.rect)  
+            window.blit(joueur.image, joueur.rect)       
             
-        if gagne:  
+    if gagne:  
             font = pygame.font.Font("fonts/Minecraft.ttf", 72)
             texte = font.render("Partie gagnee !", True, (0, 0, 0))
             window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
-        """else:
+    else:
             filter = pygame.surface.Surface((1024, 768))
             filter.fill(pygame.color.Color('White'))
-            filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
-            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)"""
+            filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
+            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
 def genererMur():
     
  while True:
@@ -341,7 +359,7 @@ while run:
         if btnSprite1.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
-            joueur = Player(512, 334, 0)
+            joueur = Player(100, 100, 0)
         elif btnSprite2.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
