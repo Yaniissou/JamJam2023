@@ -22,7 +22,7 @@ lampe = pygame.image.load('assets/elements/circleTEST.png')
 # Paramètres gerant le rythme
 BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
-BEAT_TOLERANCE = 0.06  # Tolerance de mauvais timing
+BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
 key_pressed = False
 
 # Créer une classe pour le joueur
