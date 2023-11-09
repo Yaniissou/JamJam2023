@@ -1,3 +1,3 @@
-#!bin/sh
+#! /usr/bin/bash
 
-python3 "$(dirname "$(readlink -f "$0")")/src/main.py"
+python3 "./src/main.py"
