@@ -182,10 +182,15 @@ def drawHistory(window):
         
         historytext = infofont.render(historymessages[i], False, (255, 255, 255))
         historytext_rect = historytext.get_rect()
-        historytext_rect.center = (window_width / 3, historyheight)
+        historytext_rect.center = (window_width / 1.25, historyheight)
         window.blit(historytext, historytext_rect)
         historyheight += 30
         
+    historyheight = 120
+    rulestitle = titlefont.render("REGLES",False,(255,255,255))
+    rulestitle_rect = rulestitle.get_rect()
+    rulestitle_rect.center = (window_width/3,historyheight -50 ) 
+    window.blit(rulestitle,rulestitle_rect)    
     returnButton.draw(window)
     startButton.draw(window) 
     
