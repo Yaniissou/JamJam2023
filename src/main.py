@@ -7,6 +7,7 @@ from enemy import Enemy
 import random
 from usb import CleUSB
 from mur import Mur
+import time
 #inits
 pygame.init()
 pygame.font.init()
@@ -48,6 +49,7 @@ cle_usb = CleUSB(0, 0)
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
 creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
+endButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/accueil.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
 gameloop = 0
 #bouton pour choisir genre
@@ -91,7 +93,12 @@ ennemies.append(enemy5)
 ennemies.append(enemy6)
 ennemies.append(enemy7)
 ennemies.append(enemy8)
-
+BPM = 124 #battements par seconde de la musique du jeu
+BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
+BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
+key_pressed = False
+last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
+error_count = 0
 screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
@@ -140,31 +147,64 @@ def initWindow(window,firstRun):
 
         
 def drawHistory(window):
-    infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
-    messages = ["Vous venez de lamentablement foirer vos partiels de mi- semestre,",
-                "et la suite semble mal embarquee :/",
+    titlefont = pygame.font.Font("fonts/Minecraft.ttf",25)
+    infofont = pygame.font.Font("fonts/Minecraft.ttf", 17)
+    
+    titlefont = pygame.font.Font("fonts/Minecraft.ttf",25)
+    infofont = pygame.font.Font("fonts/Minecraft.ttf", 17)
+    
+    historymessages = ["Vous venez de lamentablement foirer vos partiels de mi-",
+                "semestre, et la suite semble mal embarquee :/",
                 "Votre derniere chance ?",
                 "Obtenir 20/20 a tous les examens de la prochaine semaine de partiels !",
-                "",
-                "Alors que vous aviez abandonne tout espoir, une rumeur commence a se propager dans l'IUT:",
-                "",
-                "Il existerait une clef USB secrete dans le bureau 101,",
-                "regroupant l'integralite des prochains examens...",
-                "Votre objectif ?", "Muni d'une lampe torche, vous ",
-                "infiltrez l'IUT de nuit pour recuperer la fameuse clef.",
-                "Mais attention, des choses etranges se produisent",
-                "en dehors des heures d'ouverture..."]
+                "Alors que vous aviez abandonne tout espoir, une rumeur",
+                "commence a se propager dans l'IUT: il existerait une clef USB ",
+                "secrete dans le bureau 101, regroupant l'integralite des",
+                " prochains examens...",
+                "Votre objectif ?",
+                "Muni d'une lampe torche, vous infiltrez l'IUT de nuit pour ",
+                "recuperer la fameuse clef. Mais attention, des choses etranges",
+                "se produisent en dehors des heures d'ouverture...",
+    ]
     clear(window)
     window.fill((0, 0, 0))
     historyheight = 120
-    for i in range(len(messages)):
+    historytitle = titlefont.render("HISTOIRE",False,(255,255,255))
+    historytitle_rect = historytitle.get_rect()
+    historytitle_rect.center = (window_width/3,historyheight -50 ) 
+    window.blit(historytitle,historytitle_rect)
+    
+    rulesmessages = ["Cherchez la clef USB a l'aide des",
+                     "fleches directionnelles du ",
+                     "clavier, esquivez les professeurs",
+                     "et suivez le rthme de la",
+                     "musique pour camoufler vos pas",
+                     "et ne pas vous faire reperer !"]
+    
+
+    
+    for i in range(len(historymessages)):
         
-        historytext = infofont.render(messages[i], False, (255, 255, 255))
+        historytext = infofont.render(historymessages[i], False, (255, 255, 255))
         historytext_rect = historytext.get_rect()
-        historytext_rect.center = (window_width / 2, historyheight)
+        historytext_rect.center = (window_width /3, historyheight)
         window.blit(historytext, historytext_rect)
         historyheight += 30
         
+    historyheight = 120
+    rulestitle = titlefont.render("REGLES",False,(255,255,255))
+    rulestitle_rect = rulestitle.get_rect()
+    rulestitle_rect.center = (window_width/1.25,historyheight -50 ) 
+    window.blit(rulestitle,rulestitle_rect)  
+    
+    for i in range(len(rulesmessages)):
+        
+        rulestext = infofont.render(rulesmessages[i], False, (255, 255, 255))
+        rulestext_rect = rulestext.get_rect()
+        rulestext_rect.center = (window_width /1.25, historyheight)
+        window.blit(rulestext, rulestext_rect)
+        historyheight += 30
+          
     returnButton.draw(window)
     startButton.draw(window) 
     
@@ -288,9 +328,35 @@ def playingMod(window,joueur,gameloop) :
     global screamer_start_time
     global run
     global gagne
-    if cle_usb.check_collision(joueur):
-        print("Partie gagnée")
-        gagne = True
+    global key_pressed
+    global last_beat_time
+    global error_count
+    if event.type == pygame.KEYDOWN and not key_pressed and not gagne:
+                key_pressed = True
+                start_time = time.time()  # Enregistrez le temps auquel la touche a été enfoncée
+                if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
+                    print("je suis dans la boucle1")
+                    current_time = time.time()
+                    if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE and error_count < 2:
+                        print("je suis dans la boucle2")
+                        print("Bon timing")
+                        joueur.deplacer()       
+                        if cle_usb.check_collision(joueur):
+                            print("Partie gagnée")
+                            gagne = True        
+                            return GameState.VICTORY
+                    else:
+                        error_count += 1
+                        print("Mauvais timing")
+  
+                    if error_count >= 2:
+                        return GameState.LOSER
+
+                    last_beat_time = current_time
+    elif event.type == pygame.KEYUP:
+        key_pressed = False
+        start_time = None
+                
     for mur in murs:
         if joueur.rect.colliderect(mur.rect):
             overlap_x = joueur.rect.width / 2 + mur.rect.width / 2 - abs(joueur.rect.centerx - mur.rect.centerx)
@@ -316,6 +382,21 @@ def playingMod(window,joueur,gameloop) :
     
     
     for enemy in ennemies:
+        for mur in murs:
+            if enemy.rect.colliderect(mur.rect):
+                overlap_x = enemy.rect.width / 2 + mur.rect.width / 2 - abs(enemy.rect.centerx - mur.rect.centerx)
+                overlap_y = enemy.rect.height / 2 + mur.rect.height / 2 - abs(enemy.rect.centery - mur.rect.centery)
+
+                if overlap_x < overlap_y:
+                    if enemy.rect.centerx < mur.rect.centerx:
+                        enemy.rect.right = mur.rect.left
+                    else:
+                        enemy.rect.left = mur.rect.right
+                else:
+                    if enemy.rect.centery < mur.rect.centery:
+                        enemy.rect.bottom = mur.rect.top
+                    else:
+                        enemy.rect.top = mur.rect.bottom
         if enemy.rect.colliderect(joueur.rect):
         
             if screamer_start_time == 0:
@@ -325,15 +406,16 @@ def playingMod(window,joueur,gameloop) :
 
                 # Commencer l'animation du screamer
                 screamer_start_time = pygame.time.get_ticks()  # Enregistrez le moment où l'animation du screamer commence
+                gameMusic.stop()
                 darwinmp3.play()
                 joueur.arreter_animation()
         
 
-            # Obtenez le temps écoulé depuis le début de l'animation
+            #le temps écoulé depuis le début de l'animation
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - screamer_start_time
 
-            # Alternez les couleurs de fond entre noir et rouge pendant l'animation du screamer
+            # Alterner les couleurs de fond entre noir et rouge pendant l'animation du screamer
         
             if (elapsed_time // 250) % 2 == 0:
                 background_color = (0, 0, 0)
@@ -344,25 +426,47 @@ def playingMod(window,joueur,gameloop) :
             window.blit(images_scream[0], (150, 30))
             pygame.display.update()
 
-            if elapsed_time > 2000:  # Arrêtez l'effet après 2 secondes (ajustez le temps si nécessaire)
-                run = False
+            if elapsed_time > 2000:  # Arrêter l'effet après 2 secondes (ajuster le temps si nécessaire)
+                
+                return GameState.LOSER
         elif not enemy.rect.colliderect(joueur.rect):
             enemy.deplacer(joueur)
-            joueur.deplacer()
             window.blit(enemy.image, enemy.rect)  
             window.blit(joueur.image, joueur.rect)       
-            
+
     if gagne:  
+            #print("NOOOOOOOOOOOOOOOOO")
             font = pygame.font.Font("fonts/Minecraft.ttf", 72)
-            texte = font.render("Partie gagnee !", True, (0, 0, 0))
-            window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
+            #texte = font.render("Partie gagnee !", True, (0, 0, 0))
+           # window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
     else:
-            filter = pygame.surface.Surface((1024, 768))
-            filter.fill(pygame.color.Color('White'))
-            filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
-            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+        filter = pygame.surface.Surface((1024, 768))
+        filter.fill(pygame.color.Color('White'))
+        filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
+        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+    return GameState.PLAYING    
+def reset_game():
+    global screamer_start_time, run, gagne, key_pressed, last_beat_time, error_count, gameloop,ennemies
+    screamer_start_time = 0
+    run = True
+    gagne = False
+    key_pressed = False
+    last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
+    error_count = 0
+    gameloop = 0
+    ennemies = [
+        Enemy(800, 334, images),
+        Enemy(700, 500, images),
+        Enemy(600, 200, images),
+        Enemy(200, 500, images),
+        Enemy(700, 800, images),
+        Enemy(300, 500, images),
+        Enemy(400, 600, images),
+        Enemy(400, 200, images)
+    ]
+    genererMur()
 def genererMur():
     
  while True:
@@ -385,6 +489,7 @@ def genererMur():
 #main loop
 genererMur()
 while run:
+   
     clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -399,11 +504,11 @@ while run:
     elif(gamestate == GameState.WAITING_FOR_HISTORY):
         if startButton.isClicked():
             gamestate = GameState.HISTORY
-            print("Start button clicked")
+           
             pygame.mouse.set_pos(window_width/2, window_height/2)
         elif creditButton.isClicked():
             gamestate = GameState.CREDITS
-            print("Credit button clicked")
+           
             
     elif(gamestate == GameState.CREDITS):
         drawCredits(window)
@@ -426,6 +531,7 @@ while run:
             clear(window)
             #Afficher ta fenêtre
             drawCharacter(window)
+            
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
@@ -436,10 +542,12 @@ while run:
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(100, 100, 0)
+            #murs = appendMurs(nb_murs)
         elif btnSprite2.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(512, 354, 1)
+            #murs = appendMurs(nb_murs)
         elif returnButton.isClicked():
             clear(window)
             drawHistory(window) 
@@ -447,9 +555,10 @@ while run:
             pygame.mouse.set_pos(window_width/2, window_height/2)  
             
     elif gamestate == GameState.PLAYING:
-        playingMod(window, joueur, gameloop)    
+        gamestate = playingMod(window, joueur, gameloop)    
         gameloop += 1;    
-        
+        if gamestate == GameState.VICTORY or gamestate == GameState.LOSER:
+            reset_game()
     
     
         
@@ -462,6 +571,33 @@ while run:
     elif(gamestate == GameState.START):
         startGame(window)
         gamestate = GameState.PLAYING
+        
+    elif(gamestate == GameState.VICTORY):   
+         
+        texte = font.render("Partie gagnee !", True, (255, 255, 255))
+        window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
+        joueur.arreter_animation()
+        endButton.draw(window)
+        gameMusic.stop()    
+        gamestate = GameState.WAITING_FOR_REDO
+        
+    elif(gamestate == GameState.WAITING_FOR_REDO):
+        if endButton.isClicked():
+            gamestate = GameState.INITIATING
+            print("End button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2) 
+    
+    elif(gamestate == GameState.LOSER):
+        texte = font.render("Partie perdue !", True, (255, 255, 255))
+        window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 5 - texte.get_height() // 2))
+        joueur.arreter_animation()
+        endButton.draw(window)
+        gameMusic.stop()    
+        gamestate = GameState.WAITING_FOR_REDO
+
+        
+        
+    
 
 
     

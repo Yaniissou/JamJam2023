@@ -14,15 +14,15 @@ fenetre = pygame.display.set_mode((screen_width, screen_height))
 # Charger les images
 
 image_mur = pygame.image.load("assets/elements/beacon.png")
-image_joueur = pygame.image.load("assets/player/boy/Player1.png")
+image_joueur = pygame.image.load("assets/player/Player11.png")
 image_usbkey = pygame.image.load("assets/elements/usbkey.png")
 image_bg = pygame.image.load("assets/bg/bg.png")
-lampe = pygame.image.load('assets/elements/circle.png')
+lampe = pygame.image.load('assets/elements/circleTEST.png')
 
 # Paramètres gerant le rythme
 BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
-BEAT_TOLERANCE = 0.06  # Tolerance de mauvais timing
+BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
 key_pressed = False
 
 # Créer une classe pour le joueur
@@ -131,7 +131,7 @@ while True:
                 if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
                     
                     current_time = time.time()
-                    if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE:
+                    if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE and error_count < 2:
                         print("Bon timing")
                         old_rect_position = joueur.rect.copy()
                         touches = pygame.key.get_pressed()
@@ -173,7 +173,7 @@ while True:
         else:
             filter = pygame.surface.Surface((screen_width, screen_height))
             filter.fill(pygame.color.Color('White'))
-            filter.blit(lampe, (joueur.rect.centerx-100, joueur.rect.centery-100))
+            filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
             fenetre.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)              
 
         # Vérifie si le joueur a maintenu la touche pendant plus d'une seconde
