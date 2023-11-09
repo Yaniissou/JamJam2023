@@ -342,10 +342,10 @@ def playingMod(window,joueur,gameloop) :
                 key_pressed = True
                 start_time = time.time()  # Enregistre le temps auquel la touche a été enfoncée
                 if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
-                    print("je suis dans la boucle1")
+                    #print("je suis dans la boucle1")
                     current_time = time.time()
                     if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE and error_count < 2:
-                        print("je suis dans la boucle2")
+                        #print("je suis dans la boucle2")
                         print("Bon timing")
                         joueur.deplacer()       
                         if cle_usb.check_collision(joueur):
