@@ -152,9 +152,9 @@ def drawHistory(window):
     startButton.draw(window) 
     
 def drawCredits(window):
-    creditlist = [[pygame.image.load("assets/credits/gabriel128.png"),"Gabriel SCHAAL","project manager, developer, game designer"],
-                  [pygame.image.load("assets/credits/ilan128.png"),"Ilan DARMON","developer, quality control, artist"],
-                  [pygame.image.load("assets/credits/yanis128.png"),"Yanis HARKATI","repository manager, developer, menu designer"]]
+    creditlist = [[pygame.image.load("assets/credits/gabriel128circle.png"),"Gabriel SCHAAL","project manager, developer, game designer"],
+                  [pygame.image.load("assets/credits/ilan128circle.png"),"Ilan DARMON","developer, quality control, artist"],
+                  [pygame.image.load("assets/credits/yanis128circle.png"),"Yanis HARKATI","repository manager, developer, menu designer"]]
 
     musics = ["placeholder1","placeholder2","placeholder3"]
     images = ["placeholder1","placeholder2","placeholder3"]
