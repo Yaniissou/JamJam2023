@@ -150,6 +150,9 @@ def drawHistory(window):
     titlefont = pygame.font.Font("fonts/Minecraft.ttf",25)
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 17)
     
+    titlefont = pygame.font.Font("fonts/Minecraft.ttf",25)
+    infofont = pygame.font.Font("fonts/Minecraft.ttf", 17)
+    
     historymessages = ["Vous venez de lamentablement foirer vos partiels de mi-",
                 "semestre, et la suite semble mal embarquee :/",
                 "Votre derniere chance ?",
@@ -178,19 +181,30 @@ def drawHistory(window):
                      "musique pour camoufler vos pas",
                      "et ne pas vous faire reperer !"]
     
+
+    
     for i in range(len(historymessages)):
         
         historytext = infofont.render(historymessages[i], False, (255, 255, 255))
         historytext_rect = historytext.get_rect()
-        historytext_rect.center = (window_width / 1.25, historyheight)
+        historytext_rect.center = (window_width /3, historyheight)
         window.blit(historytext, historytext_rect)
         historyheight += 30
         
     historyheight = 120
     rulestitle = titlefont.render("REGLES",False,(255,255,255))
     rulestitle_rect = rulestitle.get_rect()
-    rulestitle_rect.center = (window_width/3,historyheight -50 ) 
-    window.blit(rulestitle,rulestitle_rect)    
+    rulestitle_rect.center = (window_width/1.25,historyheight -50 ) 
+    window.blit(rulestitle,rulestitle_rect)  
+    
+    for i in range(len(rulesmessages)):
+        
+        rulestext = infofont.render(rulesmessages[i], False, (255, 255, 255))
+        rulestext_rect = rulestext.get_rect()
+        rulestext_rect.center = (window_width /1.25, historyheight)
+        window.blit(rulestext, rulestext_rect)
+        historyheight += 30
+          
     returnButton.draw(window)
     startButton.draw(window) 
     
