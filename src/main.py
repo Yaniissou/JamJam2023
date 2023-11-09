@@ -7,6 +7,7 @@ from enemy import Enemy
 import random
 from usb import CleUSB
 from mur import Mur
+import time
 #inits
 pygame.init()
 pygame.font.init()
@@ -92,7 +93,12 @@ ennemies.append(enemy5)
 ennemies.append(enemy6)
 ennemies.append(enemy7)
 ennemies.append(enemy8)
-
+BPM = 124 #battements par seconde de la musique du jeu
+BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
+BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
+key_pressed = False
+last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
+error_count = 0
 screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
@@ -289,9 +295,35 @@ def playingMod(window,joueur,gameloop) :
     global screamer_start_time
     global run
     global gagne
-    if cle_usb.check_collision(joueur):
-        print("Partie gagnée")
-        return GameState.VICTORY
+    global key_pressed
+    global last_beat_time
+    global error_count
+    if event.type == pygame.KEYDOWN and not key_pressed and not gagne:
+                key_pressed = True
+                start_time = time.time()  # Enregistrez le temps auquel la touche a été enfoncée
+                if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
+                    print("je suis dans la boucle1")
+                    current_time = time.time()
+                    if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE and error_count < 2:
+                        print("je suis dans la boucle2")
+                        print("Bon timing")
+                        joueur.deplacer()       
+                        if cle_usb.check_collision(joueur):
+                            print("Partie gagnée")
+                            gagne = True        
+                            return GameState.VICTORY
+                    else:
+                        error_count += 1
+                        print("Mauvais timing")
+  
+                    if error_count >= 2:
+                        return GameState.LOSER
+
+                    last_beat_time = current_time
+    elif event.type == pygame.KEYUP:
+        key_pressed = False
+        start_time = None
+                
     for mur in murs:
         if joueur.rect.colliderect(mur.rect):
             overlap_x = joueur.rect.width / 2 + mur.rect.width / 2 - abs(joueur.rect.centerx - mur.rect.centerx)
@@ -366,7 +398,6 @@ def playingMod(window,joueur,gameloop) :
                 return GameState.LOSER
         elif not enemy.rect.colliderect(joueur.rect):
             enemy.deplacer(joueur)
-            joueur.deplacer()
             window.blit(enemy.image, enemy.rect)  
             window.blit(joueur.image, joueur.rect)       
 
@@ -378,10 +409,10 @@ def playingMod(window,joueur,gameloop) :
             joueur.arreter_animation()
             gameMusic.stop()
     else:
-        '''filter = pygame.surface.Surface((1024, 768))
+        filter = pygame.surface.Surface((1024, 768))
         filter.fill(pygame.color.Color('White'))
         filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
-        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)'''
+        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
     return GameState.PLAYING    
 def genererMur():
     
@@ -405,7 +436,7 @@ def genererMur():
 #main loop
 genererMur()
 while run:
-    print(gamestate)
+   
     clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -420,11 +451,11 @@ while run:
     elif(gamestate == GameState.WAITING_FOR_HISTORY):
         if startButton.isClicked():
             gamestate = GameState.HISTORY
-            print("Start button clicked")
+           
             pygame.mouse.set_pos(window_width/2, window_height/2)
         elif creditButton.isClicked():
             gamestate = GameState.CREDITS
-            print("Credit button clicked")
+           
             
     elif(gamestate == GameState.CREDITS):
         drawCredits(window)
