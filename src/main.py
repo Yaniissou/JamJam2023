@@ -11,9 +11,10 @@ import time #pour gerer le rythme
 import argparse
 
 parser = argparse.ArgumentParser(description='Jeu "Save The Exams"')
-parser.add_argument('-l', '--lampe', action='store_true', help='Desactiver la lampe torche')
+parser.add_argument('-f', '--facile', action='store_true', help='Mode facile (desactive la lampe torche)')
+
 args = parser.parse_args()
-not_use_torch = args.lampe
+not_use_torch = args.facile
 
 pygame.init()
 pygame.font.init()
@@ -28,7 +29,9 @@ pygame.display.set_icon(favicon)
 
 #sol de l'iut et lampe torche
 image_bg = pygame.image.load("assets/bg/bg.png")
-lampe = pygame.image.load('assets/elements/circleTest.png')
+
+lampe = pygame.image.load('assets/elements/circle200.png')
+
 
 #dimensions de la fenetre
 window_width = 1024
