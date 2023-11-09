@@ -170,27 +170,29 @@ def drawHistory(window):
     startButton.draw(window) 
     
 def drawCredits(window):
-    creditlist = [[pygame.image.load("assets/credits/gabriel128circle.png"),"Gabriel SCHAAL","project manager, developer, game designer"],
-                  [pygame.image.load("assets/credits/ilan128circle.png"),"Ilan DARMON","developer, quality control, artist"],
-                  [pygame.image.load("assets/credits/yanis128circle.png"),"Yanis HARKATI","repository manager, developer, menu designer"]]
+    creditlist = [[pygame.image.load("assets/credits/gabriel128circle.png"),"Gabriel SCHAAL","Game designer & developer"],
+                  [pygame.image.load("assets/credits/ilan128circle.png"),"Ilan DARMON","Artist & developer"],
+                  [pygame.image.load("assets/credits/yanis128circle.png"),"Yanis HARKATI","Menu designer & developer"],
+                  [pygame.image.load("assets/credits/antoine.png"), "Antoine HUGUET", "Animator"]
+                 ]
 
-    musics = ["placeholder1","placeholder2","placeholder3"]
-    images = ["placeholder1","placeholder2","placeholder3"]
+    musics = ["https://www.youtube.com/watch?v=CqJ95-zjvK0","https://www.youtube.com/watch?v=uQbzK4OROjQ", "Herve Blanchon"]
+    images = ["https://www.pixelicious.xyz"]
     infofont = pygame.font.Font("fonts/Minecraft.ttf", 15)
     titlefont = pygame.font.Font("fonts/Minecraft.ttf", 27)
     subtitlefont = pygame.font.Font("fonts/Minecraft.ttf", 22)
     
     sourcetitle = titlefont.render("Sources", False, (255, 255, 255))
     source_title_rect = sourcetitle.get_rect()
-    source_title_rect.center = (window_width/2, window_height/1.75)
+    source_title_rect.center = (window_width/2, window_height/1.70)
     
-    musicsubtitle = subtitlefont.render("Musiques", False, (255, 255, 255))
+    musicsubtitle = subtitlefont.render("Audios", False, (255, 255, 255))
     musicsubtitle_rect = musicsubtitle.get_rect()
-    musicsubtitle_rect.center = (window_width/1.5, window_height/1.35)
+    musicsubtitle_rect.center = (window_width/1.4, window_height/1.45)
     
-    imagessubtitle = subtitlefont.render("Images", False, (255, 255, 255))
+    imagessubtitle = subtitlefont.render("Visuels", False, (255, 255, 255))
     imagessubtitle_rect = imagessubtitle.get_rect()
-    imagessubtitle_rect.center = (294, window_height/1.35)
+    imagessubtitle_rect.center = (294, window_height/1.45)
     
     
     clear(window)
@@ -214,7 +216,7 @@ def drawCredits(window):
         window.blit(currentname, currentname_rect)
         window.blit(currentrole, currentrole_rect)
         historyheight += 30
-        width += 325
+        width += 240
         
     window.blit(sourcetitle, source_title_rect)
     window.blit(musicsubtitle, musicsubtitle_rect)
@@ -223,13 +225,13 @@ def drawCredits(window):
     for i in range(len(musics)):
         currentmusic = infofont.render(musics[i], False, (255, 255, 255))
         currentmusic_rect = currentmusic.get_rect()
-        currentmusic_rect.center = (window_width/1.5, window_height/1.25 + i*30)
+        currentmusic_rect.center = (window_width/1.4, window_height/1.35 + i*30)
         window.blit(currentmusic, currentmusic_rect)
     
     for i in range(len(images)):
         currentimage = infofont.render(images[i], False, (255, 255, 255))
         currentimage_rect = currentimage.get_rect()
-        currentimage_rect.center = (294, window_height/1.25 + i*30)
+        currentimage_rect.center = (294, window_height/1.35 + i*30)
         window.blit(currentimage, currentimage_rect)    
     returnButton.draw(window)  
     
