@@ -365,15 +365,17 @@ def playingMod(window,joueur,gameloop) :
             if elapsed_time > 2000:  # Arrêtez l'effet après 2 secondes (ajustez le temps si nécessaire)
                 run = False
         elif not enemy.rect.colliderect(joueur.rect):
-            enemy.deplacer(joueur)
+            if not gagne:
+                enemy.deplacer(joueur)
             joueur.deplacer()
-            window.blit(enemy.image, enemy.rect)  
             window.blit(joueur.image, joueur.rect)
+            window.blit(enemy.image, enemy.rect)  
+            
             
     if gagne:  
             font = pygame.font.Font("fonts/Minecraft.ttf", 72)
             texte = font.render("Partie gagnee !", True, (0, 0, 0))
-            window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
+            window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))   
             joueur.arreter_animation()
             gameMusic.stop()
     elif not gagne and screamerappears == False :
