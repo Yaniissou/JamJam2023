@@ -282,10 +282,10 @@ def playingMod(window,joueur,gameloop) :
     start.stop()
     if gameloop == 0:
         gameMusic.play()
-    joueur.deplacer()
     global screamer_start_time
     global run
     global gagne
+    screamerappears = False
     if cle_usb.check_collision(joueur):
         print("Partie gagnée")
         gagne = True
@@ -304,6 +304,7 @@ def playingMod(window,joueur,gameloop) :
                     joueur.rect.bottom = mur.rect.top
                 else:
                     joueur.rect.top = mur.rect.bottom
+                    
 
     window.blit(image_bg, (0, 0))
     
@@ -314,11 +315,28 @@ def playingMod(window,joueur,gameloop) :
     
     
     for enemy in ennemies:
+        for mur in murs:
+            if enemy.rect.colliderect(mur.rect):
+                overlap_x = enemy.rect.width / 2 + mur.rect.width / 2 - abs(enemy.rect.centerx - mur.rect.centerx)
+                overlap_y = enemy.rect.height / 2 + mur.rect.height / 2 - abs(enemy.rect.centery - mur.rect.centery)
+
+                if overlap_x < overlap_y:
+                    if enemy.rect.centerx < mur.rect.centerx:
+                        enemy.rect.right = mur.rect.left
+                    else:
+                        enemy.rect.left = mur.rect.right
+                else:
+                    if enemy.rect.centery < mur.rect.centery:
+                        enemy.rect.bottom = mur.rect.top
+                    else:
+                        enemy.rect.top = mur.rect.bottom
         if enemy.rect.colliderect(joueur.rect):
-        
+            screamerappears = True
             if screamer_start_time == 0:
                 # En cas de collision, réinitialisez les positions des personnages en haut à gauche
-                joueur.rect.topleft = (0, 0)
+                
+                joueur.rect.topleft = (0,0)
+                
                 enemy.rect.topleft = (0, 0)
 
                 # Commencer l'animation du screamer
@@ -348,7 +366,7 @@ def playingMod(window,joueur,gameloop) :
             enemy.deplacer(joueur)
             joueur.deplacer()
             window.blit(enemy.image, enemy.rect)  
-            window.blit(joueur.image, joueur.rect)       
+            window.blit(joueur.image, joueur.rect)
             
     if gagne:  
             font = pygame.font.Font("fonts/Minecraft.ttf", 72)
@@ -356,7 +374,7 @@ def playingMod(window,joueur,gameloop) :
             window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
-    else:
+    elif not gagne and screamerappears == False :
             filter = pygame.surface.Surface((1024, 768))
             filter.fill(pygame.color.Color('White'))
             filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
