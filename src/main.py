@@ -116,6 +116,7 @@ error_count = 0 #nombre d'erreurs de timing autorisé
 screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
+click = pygame.mixer.Sound("assets/sounds/menus/click.mp3")
 gagne =False
 
 window = pygame.display.set_mode((window_width, window_height))
@@ -519,18 +520,19 @@ while run:
     elif(gamestate == GameState.WAITING_FOR_HISTORY):
         if startButton.isClicked():
             gamestate = GameState.HISTORY
+            click.play()
            
             pygame.mouse.set_pos(window_width/2, window_height/2)
         elif creditButton.isClicked():
             gamestate = GameState.CREDITS
-           
+            click.play()
             
     elif(gamestate == GameState.CREDITS):
         drawCredits(window)
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
-        
+            click.play()
     
     elif(gamestate == GameState.HISTORY):
         clear(window)
@@ -546,10 +548,12 @@ while run:
             clear(window)
             #Afficher ta fenêtre
             drawCharacter(window)
+            click.play()
             
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
+            click.play()
             
     elif(gamestate == GameState.CHARACTER):
         
@@ -557,17 +561,20 @@ while run:
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(100, 100, 0)
+            click.play()
             #murs = appendMurs(nb_murs)
         elif btnSprite2.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(100, 100, 1)
+            click.play()
             #murs = appendMurs(nb_murs)
         elif returnButton.isClicked():
             clear(window)
             drawHistory(window) 
             gamestate = GameState.WAITING_FOR_CHARACTER  
             pygame.mouse.set_pos(window_width/2, window_height/2)  
+            click.play()
             
     elif gamestate == GameState.PLAYING:
         gamestate = playingMod(window, joueur, gameloop)    
@@ -581,11 +588,13 @@ while run:
         if startButton.isClicked():
             gamestate = GameState.START  
             print("Start button clicked") 
+            click.play()
             pygame.mixer.music.stop()
     
     elif(gamestate == GameState.START):
         startGame(window)
         gamestate = GameState.PLAYING
+        
         
     elif(gamestate == GameState.VICTORY):   
          
@@ -601,6 +610,7 @@ while run:
             gamestate = GameState.INITIATING
             print("End button clicked")
             pygame.mouse.set_pos(window_width/2, window_height/2) 
+            click.play()
     
     elif(gamestate == GameState.LOSER):
         texte = font.render("Partie perdue !", True, (255, 255, 255))
