@@ -328,11 +328,11 @@ def playingMod(window,joueur,gameloop) :
                 joueur.arreter_animation()
         
 
-            # Obtenez le temps écoulé depuis le début de l'animation
+            #le temps écoulé depuis le début de l'animation
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - screamer_start_time
 
-            # Alternez les couleurs de fond entre noir et rouge pendant l'animation du screamer
+            # Alterner les couleurs de fond entre noir et rouge pendant l'animation du screamer
         
             if (elapsed_time // 250) % 2 == 0:
                 background_color = (0, 0, 0)
@@ -343,8 +343,9 @@ def playingMod(window,joueur,gameloop) :
             window.blit(images_scream[0], (150, 30))
             pygame.display.update()
 
-            if elapsed_time > 2000:  # Arrêtez l'effet après 2 secondes (ajustez le temps si nécessaire)
-                run = False
+            if elapsed_time > 2000:  # Arrêter l'effet après 2 secondes (ajuster le temps si nécessaire)
+                
+                return GameState.LOSER
         elif not enemy.rect.colliderect(joueur.rect):
             enemy.deplacer(joueur)
             joueur.deplacer()
@@ -358,8 +359,8 @@ def playingMod(window,joueur,gameloop) :
            # window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
-    '''else:
-        filter = pygame.surface.Surface((1024, 768))
+    else:
+        '''filter = pygame.surface.Surface((1024, 768))
         filter.fill(pygame.color.Color('White'))
         filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
         window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)'''
@@ -481,7 +482,15 @@ while run:
         if endButton.isClicked():
             gamestate = GameState.INITIATING
             print("End button clicked")
-            pygame.mouse.set_pos(window_width/2, window_height/2)  
+            pygame.mouse.set_pos(window_width/2, window_height/2) 
+    
+    elif(gamestate == GameState.LOSER):
+        texte = font.render("Partie perdue !", True, (255, 255, 255))
+        window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 5 - texte.get_height() // 2))
+        joueur.arreter_animation()
+        endButton.draw(window)
+        gameMusic.stop()    
+        gamestate = GameState.WAITING_FOR_REDO
 
         
         

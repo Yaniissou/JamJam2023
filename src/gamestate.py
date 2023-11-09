@@ -15,3 +15,4 @@ class GameState(Enum):
     CREDITS = 10
     VICTORY = 11
     WAITING_FOR_REDO = 12
+    LOSER = 13
