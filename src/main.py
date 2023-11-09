@@ -47,6 +47,7 @@ cle_usb = CleUSB(0, 0)
 #vars
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
+creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
 gameloop = 0
 #bouton pour choisir genre
@@ -135,7 +136,7 @@ def initWindow(window,firstRun):
     window.blit(iutlogo, iutlogo_rect)
 
     startButton.draw(window)
-    start.play()
+    creditButton.draw(window)
 
         
 def drawHistory(window):
@@ -166,6 +167,70 @@ def drawHistory(window):
         
     returnButton.draw(window)
     startButton.draw(window) 
+    
+def drawCredits(window):
+    creditlist = [[pygame.image.load("assets/credits/gabriel128circle.png"),"Gabriel SCHAAL","project manager, developer, game designer"],
+                  [pygame.image.load("assets/credits/ilan128circle.png"),"Ilan DARMON","developer, quality control, artist"],
+                  [pygame.image.load("assets/credits/yanis128circle.png"),"Yanis HARKATI","repository manager, developer, menu designer"]]
+
+    musics = ["placeholder1","placeholder2","placeholder3"]
+    images = ["placeholder1","placeholder2","placeholder3"]
+    infofont = pygame.font.Font("fonts/Minecraft.ttf", 15)
+    titlefont = pygame.font.Font("fonts/Minecraft.ttf", 27)
+    subtitlefont = pygame.font.Font("fonts/Minecraft.ttf", 22)
+    
+    sourcetitle = titlefont.render("Sources", False, (255, 255, 255))
+    source_title_rect = sourcetitle.get_rect()
+    source_title_rect.center = (window_width/2, window_height/1.75)
+    
+    musicsubtitle = subtitlefont.render("Musiques", False, (255, 255, 255))
+    musicsubtitle_rect = musicsubtitle.get_rect()
+    musicsubtitle_rect.center = (window_width/1.5, window_height/1.35)
+    
+    imagessubtitle = subtitlefont.render("Images", False, (255, 255, 255))
+    imagessubtitle_rect = imagessubtitle.get_rect()
+    imagessubtitle_rect.center = (294, window_height/1.35)
+    
+    
+    clear(window)
+    window.fill((0, 0, 0))
+    historyheight = 120
+    width = 175
+    for i in range(len(creditlist)):
+        currentimg = creditlist[i][0]
+        currentname = infofont.render(creditlist[i][1], False, (255, 255, 255))
+        currentrole = infofont.render(creditlist[i][2], False, (255, 255, 255))
+        
+
+        currentname_rect = currentname.get_rect()
+        currentrole_rect = currentrole.get_rect()
+
+        
+        currentname_rect.center = (width, window_height/2.25)
+        currentrole_rect.center = (width,  window_height/2.15)
+        
+        window.blit(currentimg, (width-60, window_height/5))
+        window.blit(currentname, currentname_rect)
+        window.blit(currentrole, currentrole_rect)
+        historyheight += 30
+        width += 325
+        
+    window.blit(sourcetitle, source_title_rect)
+    window.blit(musicsubtitle, musicsubtitle_rect)
+    window.blit(imagessubtitle, imagessubtitle_rect)
+    
+    for i in range(len(musics)):
+        currentmusic = infofont.render(musics[i], False, (255, 255, 255))
+        currentmusic_rect = currentmusic.get_rect()
+        currentmusic_rect.center = (window_width/1.5, window_height/1.25 + i*30)
+        window.blit(currentmusic, currentmusic_rect)
+    
+    for i in range(len(images)):
+        currentimage = infofont.render(images[i], False, (255, 255, 255))
+        currentimage_rect = currentimage.get_rect()
+        currentimage_rect.center = (294, window_height/1.25 + i*30)
+        window.blit(currentimage, currentimage_rect)    
+    returnButton.draw(window)  
     
     
 screamer_start_time = 0    
@@ -334,6 +399,15 @@ while run:
             gamestate = GameState.HISTORY
             print("Start button clicked")
             pygame.mouse.set_pos(window_width/2, window_height/2)
+        elif creditButton.isClicked():
+            gamestate = GameState.CREDITS
+            print("Credit button clicked")
+            
+    elif(gamestate == GameState.CREDITS):
+        drawCredits(window)
+        if returnButton.isClicked():
+            initWindow(window,False) 
+            gamestate = GameState.WAITING_FOR_HISTORY
         
     
     elif(gamestate == GameState.HISTORY):
