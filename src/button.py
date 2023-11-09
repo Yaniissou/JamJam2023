@@ -20,7 +20,6 @@ class Button():
 		#verifie si la souris survole le bouton
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
-                print("Start button clicked")
                 action = True 
                 return action   
             

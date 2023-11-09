@@ -62,6 +62,9 @@ startButton = Button(window_width/2, window_height/1.25, pygame.image.load("asse
 creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
 endButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/accueil.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
+btnFlipper = Button(window_width/4, window_height/2, pygame.image.load("assets/buttons/btnflipper.png"))
+btnLaby = Button(window_width/2, window_height/2, pygame.image.load("assets/buttons/btnlaby.png"))
+
 gameloop = 0
 
 #bouton pour choisir genre
@@ -501,9 +504,24 @@ def genererMur():
     if not collision:
         break    
 
+def choosemap():
+    clear(window)
+    window.blit(startingBackground, (0, 0))
+    title = font.render("Choisissez votre map", False, (255, 255, 255))
+    title_rect = title.get_rect()
+    title_rect.center = (window_width/2, window_height/4)
+    window.blit(title, title_rect)
+    btnFlipper.draw(window)
+    btnLaby.draw(window)
+    returnButton.draw(window)
+    
+
+        
+    
 #main loop
 genererMur()
 while run:
+    print(gamestate)
    
     clock.tick(60)
     for event in pygame.event.get():
@@ -543,23 +561,28 @@ while run:
     elif(gamestate == GameState.WAITING_FOR_CHARACTER):    
         if startButton.isClicked():
             gamestate = GameState.CHARACTER  
-            clear(window)
+            
             #Afficher ta fenêtre
-            drawCharacter(window)
+            
             
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
             
     elif(gamestate == GameState.CHARACTER):
-        
+        clear(window)
+        drawCharacter(window)
+        gamestate = GameState.WAITING_FOR_CHOOSE_MAP
+       
+    
+    elif gamestate == GameState.WAITING_FOR_CHOOSE_MAP:
         if btnSprite1.isClicked():
-            gamestate = GameState.PLAYING
+            gamestate = GameState.CHOOSE_MAP
             clear(window)
             joueur = Player(100, 100, 0)
             #murs = appendMurs(nb_murs)
         elif btnSprite2.isClicked():
-            gamestate = GameState.PLAYING
+            gamestate = GameState.CHOOSE_MAP
             clear(window)
             joueur = Player(100, 100, 1)
             #murs = appendMurs(nb_murs)
@@ -567,13 +590,32 @@ while run:
             clear(window)
             drawHistory(window) 
             gamestate = GameState.WAITING_FOR_CHARACTER  
-            pygame.mouse.set_pos(window_width/2, window_height/2)  
+            pygame.mouse.set_pos(window_width/2, window_height/2)     
             
+            
+                 
     elif gamestate == GameState.PLAYING:
         gamestate = playingMod(window, joueur, gameloop)    
         gameloop += 1;    
         if gamestate == GameState.VICTORY or gamestate == GameState.LOSER:
             reset_game()
+            
+    elif gamestate == GameState.CHOOSE_MAP:
+        choosemap()  
+        gamestate = GameState.WAITING_FOR_MAP   
+        #pygame.mouse.set_pos(window_width/2, window_height/2)
+        
+    elif gamestate == GameState.WAITING_FOR_MAP:
+        if btnFlipper.isClicked():
+            gamestate = GameState.START
+            print("Start button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2)
+        elif btnLaby.isClicked():
+            gamestate = GameState.START
+            print("Start button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2)  
+        elif returnButton.isClicked():
+            print("Return button clicked")     
     
     
         
