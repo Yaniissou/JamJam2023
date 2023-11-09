@@ -48,6 +48,7 @@ cle_usb = CleUSB(0, 0)
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
 creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
+endButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/accueil.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
 gameloop = 0
 #bouton pour choisir genre
@@ -288,7 +289,7 @@ def playingMod(window,joueur,gameloop) :
     global gagne
     if cle_usb.check_collision(joueur):
         print("Partie gagnée")
-        gagne = True
+        return GameState.VICTORY
     for mur in murs:
         if joueur.rect.colliderect(mur.rect):
             overlap_x = joueur.rect.width / 2 + mur.rect.width / 2 - abs(joueur.rect.centerx - mur.rect.centerx)
@@ -349,18 +350,20 @@ def playingMod(window,joueur,gameloop) :
             joueur.deplacer()
             window.blit(enemy.image, enemy.rect)  
             window.blit(joueur.image, joueur.rect)       
-            
+
     if gagne:  
+            #print("NOOOOOOOOOOOOOOOOO")
             font = pygame.font.Font("fonts/Minecraft.ttf", 72)
-            texte = font.render("Partie gagnee !", True, (0, 0, 0))
-            window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
+            #texte = font.render("Partie gagnee !", True, (0, 0, 0))
+           # window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
-    else:
-            filter = pygame.surface.Surface((1024, 768))
-            filter.fill(pygame.color.Color('White'))
-            filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
-            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+    '''else:
+        filter = pygame.surface.Surface((1024, 768))
+        filter.fill(pygame.color.Color('White'))
+        filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
+        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)'''
+    return GameState.PLAYING    
 def genererMur():
     
  while True:
@@ -383,6 +386,7 @@ def genererMur():
 #main loop
 genererMur()
 while run:
+    print(gamestate)
     clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -424,6 +428,7 @@ while run:
             clear(window)
             #Afficher ta fenêtre
             drawCharacter(window)
+            
         if returnButton.isClicked():
             initWindow(window,False) 
             gamestate = GameState.WAITING_FOR_HISTORY
@@ -434,10 +439,12 @@ while run:
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(100, 100, 0)
+            #murs = appendMurs(nb_murs)
         elif btnSprite2.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
             joueur = Player(512, 354, 1)
+            #murs = appendMurs(nb_murs)
         elif returnButton.isClicked():
             clear(window)
             drawHistory(window) 
@@ -445,7 +452,7 @@ while run:
             pygame.mouse.set_pos(window_width/2, window_height/2)  
             
     elif gamestate == GameState.PLAYING:
-        playingMod(window, joueur, gameloop)    
+        gamestate = playingMod(window, joueur, gameloop)    
         gameloop += 1;    
         
     
@@ -460,6 +467,25 @@ while run:
     elif(gamestate == GameState.START):
         startGame(window)
         gamestate = GameState.PLAYING
+        
+    elif(gamestate == GameState.VICTORY):   
+         
+        texte = font.render("Partie gagnee !", True, (255, 255, 255))
+        window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
+        joueur.arreter_animation()
+        endButton.draw(window)
+        gameMusic.stop()    
+        gamestate = GameState.WAITING_FOR_REDO
+        
+    elif(gamestate == GameState.WAITING_FOR_REDO):
+        if endButton.isClicked():
+            gamestate = GameState.INITIATING
+            print("End button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2)  
+
+        
+        
+    
 
 
     

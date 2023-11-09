@@ -13,3 +13,5 @@ class GameState(Enum):
     SCREAMER = 8
     END = 9
     CREDITS = 10
+    VICTORY = 11
+    WAITING_FOR_REDO = 12
