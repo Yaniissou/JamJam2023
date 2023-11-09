@@ -341,6 +341,7 @@ def playingMod(window,joueur,gameloop) :
 
                 # Commencer l'animation du screamer
                 screamer_start_time = pygame.time.get_ticks()  # Enregistrez le moment où l'animation du screamer commence
+                gameMusic.stop()
                 darwinmp3.play()
                 joueur.arreter_animation()
         
