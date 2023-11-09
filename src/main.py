@@ -580,10 +580,11 @@ def playingModLabyrinthe(window,joueur,gameloop):
             
         joueur.arreter_animation()
     else: #code pour activer/desactiver la lampe torche
-        filter = pygame.surface.Surface((1024, 768))
-        filter.fill(pygame.color.Color('White'))
-        filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
-        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+        if not not_use_torch:
+            filter = pygame.surface.Surface((1024, 768))
+            filter.fill(pygame.color.Color('White'))
+            filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
+            window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
     return GameState.PLAYINGLABY    
 #remise des parametres du jeu à leur etat initial en cas de restart
 def reset_game():
