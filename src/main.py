@@ -147,28 +147,42 @@ def initWindow(window,firstRun):
 
         
 def drawHistory(window):
-    infofont = pygame.font.Font("fonts/Minecraft.ttf", 20)
-    messages = ["Vous venez de lamentablement foirer vos partiels de mi- semestre,",
-                "et la suite semble mal embarquee :/",
+    titlefont = pygame.font.Font("fonts/Minecraft.ttf",25)
+    infofont = pygame.font.Font("fonts/Minecraft.ttf", 17)
+    
+    historymessages = ["Vous venez de lamentablement foirer vos partiels de mi-",
+                "semestre, et la suite semble mal embarquee :/",
                 "Votre derniere chance ?",
                 "Obtenir 20/20 a tous les examens de la prochaine semaine de partiels !",
-                "",
-                "Alors que vous aviez abandonne tout espoir, une rumeur commence a se propager dans l'IUT:",
-                "",
-                "Il existerait une clef USB secrete dans le bureau 101,",
-                "regroupant l'integralite des prochains examens...",
-                "Votre objectif ?", "Muni d'une lampe torche, vous ",
-                "infiltrez l'IUT de nuit pour recuperer la fameuse clef.",
-                "Mais attention, des choses etranges se produisent",
-                "en dehors des heures d'ouverture..."]
+                "Alors que vous aviez abandonne tout espoir, une rumeur",
+                "commence a se propager dans l'IUT: il existerait une clef USB ",
+                "secrete dans le bureau 101, regroupant l'integralite des",
+                " prochains examens...",
+                "Votre objectif ?",
+                "Muni d'une lampe torche, vous infiltrez l'IUT de nuit pour ",
+                "recuperer la fameuse clef. Mais attention, des choses etranges",
+                "se produisent en dehors des heures d'ouverture...",
+    ]
     clear(window)
     window.fill((0, 0, 0))
     historyheight = 120
-    for i in range(len(messages)):
+    historytitle = titlefont.render("HISTOIRE",False,(255,255,255))
+    historytitle_rect = historytitle.get_rect()
+    historytitle_rect.center = (window_width/3,historyheight -50 ) 
+    window.blit(historytitle,historytitle_rect)
+    
+    rulesmessages = ["Cherchez la clef USB a l'aide des",
+                     "fleches directionnelles du ",
+                     "clavier, esquivez les professeurs",
+                     "et suivez le rthme de la",
+                     "musique pour camoufler vos pas",
+                     "et ne pas vous faire reperer !"]
+    
+    for i in range(len(historymessages)):
         
-        historytext = infofont.render(messages[i], False, (255, 255, 255))
+        historytext = infofont.render(historymessages[i], False, (255, 255, 255))
         historytext_rect = historytext.get_rect()
-        historytext_rect.center = (window_width / 2, historyheight)
+        historytext_rect.center = (window_width / 3, historyheight)
         window.blit(historytext, historytext_rect)
         historyheight += 30
         
