@@ -16,3 +16,11 @@ class GameState(Enum):
     VICTORY = 11
     WAITING_FOR_REDO = 12
     LOSER = 13
+    WAITING_FOR_CHOOSE_MAP = 15
+    CHOOSE_MAP = 14
+    WAITING_FOR_MAP = 16
+    PLAYINGLABY = 17
+    STARTLABY = 18
+  
+    
+    

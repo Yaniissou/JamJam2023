@@ -6,7 +6,7 @@ from player import Player
 from enemy import Enemy
 import random #pour generer la position x et y des objets de manière aléatoire
 from usb import CleUSB
-from mur import Mur
+from mur import Mur,WallLaby
 import time #pour gerer le rythme
 import argparse
 
@@ -73,6 +73,9 @@ startButton = Button(window_width/2, window_height/1.25, pygame.image.load("asse
 creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
 endButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/accueil.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
+btnFlipper = Button(window_width/4, window_height/2, pygame.image.load("assets/buttons/btnflipper.png"))
+btnLaby = Button(window_width/2, window_height/2, pygame.image.load("assets/buttons/btnlaby.png"))
+
 gameloop = 0
 
 #bouton pour choisir genre
@@ -122,6 +125,7 @@ BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
 
 
+
 if hard_timing:
     BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
 elif ez_timing:
@@ -130,7 +134,6 @@ elif god_timing:
     BEAT_TOLERANCE = 0.03
 else:
     BEAT_TOLERANCE = 0.08 
-
 
 key_pressed = False
 last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
@@ -150,8 +153,9 @@ startingBackground = pygame.image.load("assets/bg/loop.jpg")
 
 ingameBackground = pygame.image.load("assets/bg/bg.png")
 start = pygame.mixer.Sound("assets/sounds/musics/starting.ogg")
-
-
+# Labyrinthe
+level = []
+cle_usbLabby = CleUSB(920, 650)
 
 run = True
 
@@ -355,26 +359,27 @@ def drawCharacter(window) :
     
 
 def playingMod(window,joueur,gameloop) :
-    
-    clear(window)  
-    start.stop()
-    if gameloop == 0:
-        gameMusic.play()
-    joueur.deplacer()
     global screamer_start_time
     global run
     global gagne
     global key_pressed
     global last_beat_time
     global error_count
+    global start_time
+    clear(window)  
+    start.stop()
+    if gameloop == 0:
+        gameMusic.play()
+    joueur.deplacer()
+    
     if event.type == pygame.KEYDOWN and not key_pressed and not gagne:
                 key_pressed = True
                 start_time = time.time()  # Enregistre le temps auquel la touche a été enfoncée
                 if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
-                    #print("je suis dans la boucle1")
+                    
                     current_time = time.time()
                     if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE and error_count < 2:
-                        #print("je suis dans la boucle2")
+                        
                         print("Bon timing")
                         joueur.deplacer()       
                         if cle_usb.check_collision(joueur):
@@ -484,6 +489,102 @@ def playingMod(window,joueur,gameloop) :
             filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
             window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
     return GameState.PLAYING    
+def iterate(line):
+    for column_number, block in enumerate(line):
+        yield column_number, block
+        
+def genererLabyLevel():
+    global level
+    with open("assets/labyrinthe/level.txt") as level_file:
+        line_file = level_file.readline()
+        line_number = 0
+        while line_file:
+            for column_number, block in iterate(line_file):
+                if block == "+":
+                    level.append(WallLaby(line_number, column_number))
+            line_file = level_file.readline()
+            line_number += 1
+            
+def playingModLabyrinthe(window,joueur,gameloop):
+    global gagne
+    global font
+    global key_pressed
+    global error_count
+    global last_beat_time
+    global start_time
+    start.stop()
+    if gameloop == 0:
+        gameMusic.play()
+    joueur.deplacer()
+    clear(window)
+    
+
+    if event.type == pygame.KEYDOWN and not key_pressed and not gagne:
+                key_pressed = True
+                start_time = time.time()  # Enregistre le temps auquel la touche a été enfoncée
+                if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
+                    
+                    current_time = time.time()
+                    if current_time - last_beat_time >= BEAT_INTERVAL - BEAT_TOLERANCE and current_time - last_beat_time <= BEAT_INTERVAL + BEAT_TOLERANCE and error_count < 2:
+                        
+                        print("Bon timing")
+                        joueur.deplacer()       
+                        if cle_usbLabby.check_collision(joueur):
+                            print("Partie gagnée")
+                            gagne = True        
+                            return GameState.VICTORY
+                    else:
+                        error_count += 1
+                        print("Mauvais timing")
+  
+                    if error_count >= 2:
+                        return GameState.LOSER
+
+                    last_beat_time = current_time
+    elif event.type == pygame.KEYUP:
+        key_pressed = False
+        start_time = None
+    
+    
+    for wall in level:
+        if joueur.rect.colliderect(wall.rect):
+            overlap_x = joueur.rect.width / 2 + wall.rect.width / 2 - abs(joueur.rect.centerx - wall.rect.centerx)
+            overlap_y = joueur.rect.height / 2 + wall.rect.height / 2 - abs(joueur.rect.centery - wall.rect.centery)
+
+            if overlap_x < overlap_y:
+                if joueur.rect.centerx < wall.rect.centerx:
+                    joueur.rect.right = wall.rect.left
+                else:
+                    joueur.rect.left = wall.rect.right
+            else:
+                if joueur.rect.centery < wall.rect.centery:
+                    joueur.rect.bottom = wall.rect.top
+                else:
+                    joueur.rect.top = wall.rect.bottom
+    window.blit(image_bg, (0, 0))
+    for wall in level:
+        pygame.draw.rect(window, (0, 0, 0), wall.rect)
+    window.blit(joueur.image, joueur.rect.topleft)
+    
+   
+        
+        
+    
+    
+    window.blit(cle_usbLabby.image, cle_usbLabby.rect)    
+    if gagne:
+        font = pygame.font.Font("fonts/Minecraft.ttf", 72)
+        texte = font.render("Partie gagnee !", True, (0, 0, 0))
+        
+        window.blit(texte, (330 , 420))
+            
+        joueur.arreter_animation()
+    else: #code pour activer/desactiver la lampe torche
+        filter = pygame.surface.Surface((1024, 768))
+        filter.fill(pygame.color.Color('White'))
+        filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
+        window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
+    return GameState.PLAYINGLABY    
 #remise des parametres du jeu à leur etat initial en cas de restart
 def reset_game():
     global screamer_start_time, run, gagne, key_pressed, last_beat_time, error_count, gameloop,ennemies
@@ -524,9 +625,25 @@ def genererMur():
     if not collision:
         break    
 
+def choosemap():
+    clear(window)
+    window.blit(startingBackground, (0, 0))
+    title = font.render("Choisissez votre map", False, (255, 255, 255))
+    title_rect = title.get_rect()
+    title_rect.center = (window_width/2, window_height/4)
+    window.blit(title, title_rect)
+    btnFlipper.draw(window)
+    btnLaby.draw(window)
+    returnButton.draw(window)
+    
+
+        
+    
 #main loop
 genererMur()
+genererLabyLevel() 
 while run:
+    print(gamestate)
    
     clock.tick(60)
     for event in pygame.event.get():
@@ -567,7 +684,7 @@ while run:
     elif(gamestate == GameState.WAITING_FOR_CHARACTER):    
         if startButton.isClicked():
             gamestate = GameState.CHARACTER  
-            clear(window)
+            
             #Afficher ta fenêtre
             drawCharacter(window)
             click.play()
@@ -578,15 +695,20 @@ while run:
             click.play()
             
     elif(gamestate == GameState.CHARACTER):
-        
+        clear(window)
+        drawCharacter(window)
+        gamestate = GameState.WAITING_FOR_CHOOSE_MAP
+       
+    
+    elif gamestate == GameState.WAITING_FOR_CHOOSE_MAP:
         if btnSprite1.isClicked():
-            gamestate = GameState.PLAYING
+            gamestate = GameState.CHOOSE_MAP
             clear(window)
             joueur = Player(100, 100, 0)
             click.play()
             #murs = appendMurs(nb_murs)
         elif btnSprite2.isClicked():
-            gamestate = GameState.PLAYING
+            gamestate = GameState.CHOOSE_MAP
             clear(window)
             joueur = Player(100, 100, 1)
             click.play()
@@ -597,12 +719,37 @@ while run:
             gamestate = GameState.WAITING_FOR_CHARACTER  
             pygame.mouse.set_pos(window_width/2, window_height/2)  
             click.play()
+
             
+                 
     elif gamestate == GameState.PLAYING:
         gamestate = playingMod(window, joueur, gameloop)    
         gameloop += 1;    
         if gamestate == GameState.VICTORY or gamestate == GameState.LOSER:
             reset_game()
+            
+    elif gamestate == GameState.PLAYINGLABY:
+        gamestate = playingModLabyrinthe(window, joueur, gameloop)    
+        gameloop += 1;    
+        if gamestate == GameState.VICTORY or gamestate == GameState.LOSER:
+            reset_game()        
+            
+    elif gamestate == GameState.CHOOSE_MAP:
+        choosemap()  
+        gamestate = GameState.WAITING_FOR_MAP   
+        #pygame.mouse.set_pos(window_width/2, window_height/2)
+        
+    elif gamestate == GameState.WAITING_FOR_MAP:
+        if btnFlipper.isClicked():
+            gamestate = GameState.START
+            print("Start button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2)
+        elif btnLaby.isClicked():
+            gamestate = GameState.STARTLABY
+            print("Start button clicked")
+            pygame.mouse.set_pos(window_width/2, window_height/2)  
+        elif returnButton.isClicked():
+            print("Return button clicked")     
     
     
         
@@ -617,7 +764,13 @@ while run:
         startGame(window)
         gamestate = GameState.PLAYING
         
+    elif(gamestate == GameState.STARTLABY):
+        startGame(window)
+        gamestate = GameState.PLAYINGLABY
+            
+
         
+
     elif(gamestate == GameState.VICTORY):   
          
         texte = font.render("Partie gagnee !", True, (255, 255, 255))
@@ -646,4 +799,3 @@ while run:
     pygame.display.update()
         
 pygame.quit()
-
