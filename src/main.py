@@ -546,7 +546,7 @@ while run:
         elif btnSprite2.isClicked():
             gamestate = GameState.PLAYING
             clear(window)
-            joueur = Player(512, 354, 1)
+            joueur = Player(100, 100, 1)
             #murs = appendMurs(nb_murs)
         elif returnButton.isClicked():
             clear(window)
