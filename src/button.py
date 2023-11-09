@@ -7,17 +7,17 @@ class Button():
         self.rect.center = (x, y)
         
     def draw(self, screen):
-		#draw button
+		#dessine le bouton à l'ecran
         screen.blit(self.image, (self.rect.x, self.rect.y))
         
     def isClicked(self):
         action = False
         
-		#get mouse position
+		#recupere la position de la souris
         pos = pygame.mouse.get_pos()
         
 
-		#check if mouse is over the button
+		#verifie si la souris survole le bouton
         if self.rect.collidepoint(pos):
             if pygame.mouse.get_pressed()[0] == 1:
                 print("Start button clicked")

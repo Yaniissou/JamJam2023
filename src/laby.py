@@ -1,3 +1,5 @@
+#mode labyrinthe inachevée
+
 import pygame
 import sys
 
@@ -66,14 +68,13 @@ with open("assets/labyrinthe/level.txt") as level_file:
         line_file = level_file.readline()
         line_number += 1
 
-# Créer un joueur
+# Création des sprites
 player = Player(1, 1)
 cle_usb = CleUSB(screen_width / 2 - 25, screen_height / 2 + 25)
 bureau = Bureau(screen_width / 2 , screen_height / 2  )
 
 gagne = False
 
-# Boucle principale du jeu
 clock = pygame.time.Clock()
 while True:
     clock.tick(15)

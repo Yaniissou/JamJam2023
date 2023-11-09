@@ -10,23 +10,23 @@ class Player(pygame.sprite.Sprite):
         self.gender = gender
         if gender ==0:                      #0 si garcon et 1 si fille
             self.images = [
-                pygame.image.load("assets/player/Player00.png"),  # Image d'idle
-                pygame.image.load("assets/player/Player11.png"),  # Image d'idle
-                pygame.image.load("assets/player/Player22.png"),  # Walk cycle
-                pygame.image.load("assets/player/Player33.png"),  # Walk cycle
-                pygame.image.load("assets/player/Player44.png"),  # Walk cycle
-                pygame.image.load("assets/player/Player55.png")   # Walk cycle
+                pygame.image.load("assets/player/Player00.png"),  
+                pygame.image.load("assets/player/Player11.png"),  
+                pygame.image.load("assets/player/Player22.png"),  
+                pygame.image.load("assets/player/Player33.png"),  
+                pygame.image.load("assets/player/Player44.png"),  
+                pygame.image.load("assets/player/Player55.png")   
         ]
         elif gender == 1:
              self.images = [
-                pygame.image.load("assets/playerFemale/PlayerFemale00.png"),  # Image d'idle
-                pygame.image.load("assets/playerFemale/PlayerFemale11.png"),  # Image d'idle
-                pygame.image.load("assets/playerFemale/PlayerFemale22.png"),  # Walk cycle
-                pygame.image.load("assets/playerFemale/PlayerFemale33.png"),  # Walk cycle
-                pygame.image.load("assets/playerFemale/PlayerFemale44.png"),  # Walk cycle
-                pygame.image.load("assets/playerFemale/PlayerFemale55.png")   # Walk cycle
+                pygame.image.load("assets/playerFemale/PlayerFemale00.png"), 
+                pygame.image.load("assets/playerFemale/PlayerFemale11.png"),  
+                pygame.image.load("assets/playerFemale/PlayerFemale22.png"),  
+                pygame.image.load("assets/playerFemale/PlayerFemale33.png"),  
+                pygame.image.load("assets/playerFemale/PlayerFemale44.png"),  
+                pygame.image.load("assets/playerFemale/PlayerFemale55.png")   
             ]   
-            # Ajoutez les autres images d'animation
+            
         self.image_index = 0  # Indice de l'image en cours
         self.image = self.images[self.image_index]
         self.rect = self.image.get_rect()

@@ -1,3 +1,5 @@
+#fichier ayant servi à l'implementation de la partie rythmmique dans le jeu principal
+
 import pygame
 import time
 

@@ -4,26 +4,30 @@ from gamestate import GameState
 from button import Button
 from player import Player
 from enemy import Enemy
-import random
+import random #pour generer la position x et y des objets de manière aléatoire
 from usb import CleUSB
 from mur import Mur
-import time
-#inits
+import time #pour gerer le rythme
+
 pygame.init()
 pygame.font.init()
 pygame.mixer.init()
 
 clock = pygame.time.Clock()
+
 font = pygame.font.Font("fonts/Minecraft.ttf", 72)
 subfont = pygame.font.Font("fonts/Minecraft.ttf", 36)
 favicon = pygame.image.load("assets/favicon/favicon.png")
 pygame.display.set_icon(favicon)
-#element pour labyrinthe
+
+#sol de l'iut et lampe torche
 image_bg = pygame.image.load("assets/bg/bg.png")
 lampe = pygame.image.load('assets/elements/circleTest.png')
-#define dimensions
+
+#dimensions de la fenetre
 window_width = 1024
 window_height = 768
+
 # Générer les murs
 murs = []
 nb_murs = 60
@@ -45,13 +49,15 @@ for _ in range(nb_murs):  # Changer le nombre de murs si besoin
 
 # Générer la clé USB
 cle_usb = CleUSB(0, 0)
-#vars
+
+
 gamestate = GameState.INITIATING
 startButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/start.png"))
 creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
 endButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/accueil.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
 gameloop = 0
+
 #bouton pour choisir genre
 btnSprite1 = Button(303, 520.4, pygame.image.load("assets/buttons/btnsprite.png"))
 btnSprite2 = Button(702, 520.4, pygame.image.load("assets/buttons/btnsprite.png"))
@@ -75,7 +81,7 @@ images_scream = [
         pygame.image.load("assets/blanchon/screamer/Blanchon2.png")
                 ]
 
-
+#gestion du nombre d'ennemis
 ennemies = []
 enemy = Enemy(800, 334, images)
 enemy2 = Enemy(700, 500, images)
@@ -93,25 +99,26 @@ ennemies.append(enemy5)
 ennemies.append(enemy6)
 ennemies.append(enemy7)
 ennemies.append(enemy8)
+
+#parametres de gestion du rythme
 BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
 BEAT_TOLERANCE = 0.08  # Tolerance de mauvais timing
 key_pressed = False
 last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
-error_count = 0
+error_count = 0 #nombre d'erreurs de timing autorisé
 screamer_start_time = 0
 darwinmp3 = pygame.mixer.Sound("assets/sounds/game_over/darwin.mp3")
 gameMusic = pygame.mixer.Sound("assets/sounds/musics/game_theme.ogg")
 gagne =False
-#create the window
+
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption('Save The Exams')
 
-
-
-#starting background
+#charger le bg en loop (idée abandonnée car peu interessante)
 startingBackground = pygame.image.load("assets/bg/loop.jpg")
-#ingame background
+
+
 ingameBackground = pygame.image.load("assets/bg/bg.png")
 start = pygame.mixer.Sound("assets/sounds/musics/starting.ogg")
 
@@ -333,7 +340,7 @@ def playingMod(window,joueur,gameloop) :
     global error_count
     if event.type == pygame.KEYDOWN and not key_pressed and not gagne:
                 key_pressed = True
-                start_time = time.time()  # Enregistrez le temps auquel la touche a été enfoncée
+                start_time = time.time()  # Enregistre le temps auquel la touche a été enfoncée
                 if (event.key == pygame.K_UP or event.key == pygame.K_DOWN or event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
                     print("je suis dans la boucle1")
                     current_time = time.time()
@@ -378,7 +385,7 @@ def playingMod(window,joueur,gameloop) :
     for mur in murs:
         window.blit(mur.image, mur.rect)
     window.blit(cle_usb.image, cle_usb.rect)
-    # Ajouter le code pour la lampe torche ici
+    
     
     
     for enemy in ennemies:
@@ -400,12 +407,12 @@ def playingMod(window,joueur,gameloop) :
         if enemy.rect.colliderect(joueur.rect):
         
             if screamer_start_time == 0:
-                # En cas de collision, réinitialisez les positions des personnages en haut à gauche
+                # En cas de collision, réinitialise les positions des personnages en haut à gauche
                 joueur.rect.topleft = (0, 0)
                 enemy.rect.topleft = (0, 0)
 
-                # Commencer l'animation du screamer
-                screamer_start_time = pygame.time.get_ticks()  # Enregistrez le moment où l'animation du screamer commence
+                # Commence l'animation du screamer
+                screamer_start_time = pygame.time.get_ticks()  # Enregistre le moment où l'animation du screamer commence
                 gameMusic.stop()
                 darwinmp3.play()
                 joueur.arreter_animation()
@@ -415,7 +422,7 @@ def playingMod(window,joueur,gameloop) :
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - screamer_start_time
 
-            # Alterner les couleurs de fond entre noir et rouge pendant l'animation du screamer
+            # Alterne les couleurs de fond entre noir et rouge pendant l'animation du screamer
         
             if (elapsed_time // 250) % 2 == 0:
                 background_color = (0, 0, 0)
@@ -435,18 +442,19 @@ def playingMod(window,joueur,gameloop) :
             window.blit(joueur.image, joueur.rect)       
 
     if gagne:  
-            #print("NOOOOOOOOOOOOOOOOO")
+            
             font = pygame.font.Font("fonts/Minecraft.ttf", 72)
             #texte = font.render("Partie gagnee !", True, (0, 0, 0))
            # window.blit(texte, (1024 // 2 - texte.get_width() // 2, 768 // 2 - texte.get_height() // 2))
             joueur.arreter_animation()
             gameMusic.stop()
-    else:
+    else: #code pour activer/desactiver la lampe torche
         filter = pygame.surface.Surface((1024, 768))
         filter.fill(pygame.color.Color('White'))
         filter.blit(lampe, (joueur.rect.centerx-200, joueur.rect.centery-200))
         window.blit(filter, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
     return GameState.PLAYING    
+#remise des parametres du jeu à leur etat initial en cas de restart
 def reset_game():
     global screamer_start_time, run, gagne, key_pressed, last_beat_time, error_count, gameloop,ennemies
     screamer_start_time = 0
@@ -495,7 +503,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
     if(gamestate == GameState.INITIATING):
-        #draw background
+        
         initWindow(window,True)
         
         gamestate = GameState.WAITING_FOR_HISTORY
@@ -595,16 +603,7 @@ while run:
         gameMusic.stop()    
         gamestate = GameState.WAITING_FOR_REDO
 
-        
-        
-    
-
-
-    
-    
-            
-      
-        
+          
     pygame.display.update()
         
 pygame.quit()

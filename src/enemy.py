@@ -6,7 +6,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, images):
         super().__init__()
         
-        # Chargez les images et les screamers
+        
         self.images = images
         
         self.image_index = 0  # Indice de l'image en cours
@@ -25,12 +25,12 @@ class Enemy(pygame.sprite.Sprite):
         if not self.rect.colliderect(joueur.rect):
             # Avancer ou reculer en fonction de la direction
             self.rect.x += self.vitesse * self.direction
-            self.rect.y += self.vitesse * self.direction_y  # Ajout de cette ligne pour le mouvement vertical
+            self.rect.y += self.vitesse * self.direction_y  
             
             # Inverser la direction s'il atteint un bord de l'écran
             if self.rect.right > 1024 or self.rect.left < 0:
                 self.direction = -self.direction
-            if self.rect.bottom > 768 or self.rect.top < 0:  # Ajout de cette condition pour le rebond vertical
+            if self.rect.bottom > 768 or self.rect.top < 0:  
                 self.direction_y = -self.direction_y
 
             self.animer()
