@@ -12,9 +12,9 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Jeu "Save The Exams"')
 parser.add_argument('-l', '--lampe', action='store_true', help='Desactive la lampe torche')
-parser.add_argument('-d', '--difficile', action='store_true', help='Diminue la tolérence d\'erreur du timing')
-parser.add_argument('-f', '--facile', action='store_true', help='Augmente la tolérence d\'erreur du timing')
-parser.add_argument('-g', '--god', action='store_true', help='Seulement si vous avez le rythme dans la peau !')
+parser.add_argument('-d', '--difficile', action='store_true', help='Diminue la tolérence d\'erreur du timing (0.12ms)')
+parser.add_argument('-f', '--facile', action='store_true', help='Augmente la tolérence d\'erreur du timing (0.05ms)')
+parser.add_argument('-g', '--god', action='store_true', help='Seulement si vous avez le rythme dans la peau ! (0.03ms)')
 
 
 args = parser.parse_args()
