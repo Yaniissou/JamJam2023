@@ -73,8 +73,8 @@ startButton = Button(window_width/2, window_height/1.25, pygame.image.load("asse
 creditButton = Button(window_width/2, window_height/1.10, pygame.image.load("assets/buttons/credits.png"))
 endButton = Button(window_width/2, window_height/1.25, pygame.image.load("assets/buttons/accueil.png"))
 returnButton = Button(75,window_height - 50, pygame.image.load("assets/buttons/arrow.png"))
-btnFlipper = Button(window_width/4, window_height/2, pygame.image.load("assets/buttons/btnflipper.png"))
-btnLaby = Button(window_width/2, window_height/2, pygame.image.load("assets/buttons/btnlaby.png"))
+btnFlipper = Button(window_width/2.5, window_height/2, pygame.image.load("assets/buttons/btnflipper.png"))
+btnLaby = Button(window_width/1.5, window_height/2, pygame.image.load("assets/buttons/btnlaby.png"))
 
 gameloop = 0
 
@@ -643,7 +643,7 @@ def choosemap():
 genererMur()
 genererLabyLevel() 
 while run:
-   
+    print(gamestate)
     clock.tick(60)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -748,7 +748,11 @@ while run:
             print("Start button clicked")
             pygame.mouse.set_pos(window_width/2, window_height/2)  
         elif returnButton.isClicked():
-            print("Return button clicked")     
+            print("Return button clicked")  
+            gamestate = GameState.CHARACTER
+            click.play()
+            pygame.mouse.set_pos(window_width/2, window_height/2)
+
     
     
         
