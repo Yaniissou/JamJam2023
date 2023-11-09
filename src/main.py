@@ -11,10 +11,18 @@ import time #pour gerer le rythme
 import argparse
 
 parser = argparse.ArgumentParser(description='Jeu "Save The Exams"')
-parser.add_argument('-f', '--facile', action='store_true', help='Mode facile (desactive la lampe torche)')
+parser.add_argument('-l', '--lampe', action='store_true', help='Desactive la lampe torche')
+parser.add_argument('-d', '--difficile', action='store_true', help='Diminue la tolérence d\'erreur du timing')
+parser.add_argument('-f', '--facile', action='store_true', help='Augmente la tolérence d\'erreur du timing')
+parser.add_argument('-g', '--god', action='store_true', help='Seulement si vous avez le rythme dans la peau !')
+
 
 args = parser.parse_args()
-not_use_torch = args.facile
+not_use_torch = args.lampe
+hard_timing = args.difficile
+ez_timing = args.facile
+god_timing = args.god
+
 
 pygame.init()
 pygame.font.init()
@@ -112,7 +120,18 @@ ennemies.append(enemy8)
 #parametres de gestion du rythme
 BPM = 124 #battements par seconde de la musique du jeu
 BEAT_INTERVAL = 60 / BPM  # Intervalle entre les battements par secondes 
-BEAT_TOLERANCE = 0.08  # Tolerance de mauvais timing
+
+
+if hard_timing:
+    BEAT_TOLERANCE = 0.05  # Tolerance de mauvais timing
+elif ez_timing:
+   BEAT_TOLERANCE = 0.12
+elif god_timing:
+    BEAT_TOLERANCE = 0.03
+else:
+    BEAT_TOLERANCE = 0.08 
+
+
 key_pressed = False
 last_beat_time = pygame.time.get_ticks() / 1000 - BEAT_INTERVAL
 error_count = 0 #nombre d'erreurs de timing autorisé
