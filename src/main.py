@@ -125,12 +125,12 @@ def startGame(window):
     clear(window)   
     window.blit(ingameBackground, (0, 0)) 
     
-def initWindow(window,firstRun):
+def initWindow(window,firstRun,numimage):
     if(firstRun == False): 
         clear(window)
     else:
         start.play()
-    window.blit(startingBackground.subsurface(Rect(0, 0, 1024, 968)), (0, 0))
+    window.blit(startingBackground.subsurface(Rect(0, (numimage-1)*968, 1024, 968)), (0, 0))
     window.blit(startingtext, startingtext_rect)
     window.blit(subtitle, startingsubtext_rect)
     window.blit(iutlogo, iutlogo_rect)
@@ -391,12 +391,18 @@ while run:
             run = False
     if(gamestate == GameState.INITIATING):
         #draw background
-        initWindow(window,True)
+        numImage = 1
+        initWindow(window,True, numImage)
         
         gamestate = GameState.WAITING_FOR_HISTORY
         
         
     elif(gamestate == GameState.WAITING_FOR_HISTORY):
+        if numImage +1 < 19:
+            numImage +=1
+        else :
+            numImage =1
+        initWindow(window,False, numImage)
         if startButton.isClicked():
             gamestate = GameState.HISTORY
             print("Start button clicked")
