@@ -218,7 +218,7 @@ def drawHistory(window):
     rulesmessages = ["Cherchez la clef USB a l'aide des",
                      "fleches directionnelles du ",
                      "clavier, esquivez les professeurs",
-                     "et suivez le rthme de la",
+                     "et suivez le rythme de la",
                      "musique pour camoufler vos pas",
                      "et ne pas vous faire reperer !"]
     
