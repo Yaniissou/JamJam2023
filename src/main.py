@@ -252,8 +252,7 @@ def drawHistory(window):
 def drawCredits(window):
     creditlist = [[pygame.image.load("assets/credits/gabriel128circle.png"),"Gabriel SCHAAL","Game designer & developer"],
                   [pygame.image.load("assets/credits/ilan128circle.png"),"Ilan DARMON","Artist & developer"],
-                  [pygame.image.load("assets/credits/yanis128circle.png"),"Yanis HARKATI","Menu designer & developer"],
-                  [pygame.image.load("assets/credits/antoine.png"), "Antoine HUGUET", "Animator"]
+                  [pygame.image.load("assets/credits/yanis128circle.png"),"Yanis HARKATI","Menu designer & developer"]               
                  ]
 
     musics = ["https://www.youtube.com/watch?v=CqJ95-zjvK0","https://www.youtube.com/watch?v=uQbzK4OROjQ", "https://pixabay.com", "Herve Blanchon"]
@@ -296,7 +295,7 @@ def drawCredits(window):
         window.blit(currentname, currentname_rect)
         window.blit(currentrole, currentrole_rect)
         historyheight += 30
-        width += 240
+        width += 330
         
     window.blit(sourcetitle, source_title_rect)
     window.blit(musicsubtitle, musicsubtitle_rect)
