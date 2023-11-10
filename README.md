@@ -15,7 +15,7 @@ The game had to respect the following themes:
 
 
 Figures:
-- 109 students, 4 teams of 3 and 22 teams of 4
+- 100 students, 4 teams of 3 and 22 teams of 4
 - Qualified for the semi-final among the top 6 best games
 - Qualified for the final among the top 4 best games
 - Final position: Top 3
